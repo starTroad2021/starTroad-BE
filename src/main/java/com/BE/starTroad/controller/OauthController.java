@@ -25,6 +25,7 @@ public class OauthController {
 
     @Autowired
     private OauthService oauthService;
+    @Autowired
     private UserService userService;
 
     @GetMapping(value = "/{socialLoginType}")
@@ -47,29 +48,33 @@ public class OauthController {
         System.out.println(">> 소셜 로그인 서버로부터 받은 code : " + code);
 
         String result = oauthService.requestAccessToken_Info(socialLoginType, code);
-
+        System.out.println(result);
         if (result != null){
-            //result 통해서 db에 등록되어 있는 유저인지 check
 
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(result);
             JSONObject jsonObj = (JSONObject) obj;
 
-            String email = jsonObj.get("email").toString();
+            String email = jsonObj.get("user_email").toString();
 
             if (userService.findOne(email).isPresent()) {
-                System.out.println("hiiiiii");
+                System.out.println("Already registered USER");
+                //홈화면
+                return "/starTroad";
             }
             else {
-
+                System.out.println("new USER");
+                User newUser = new User();
+                newUser.setEmail(email);
+                newUser.setName(jsonObj.get("user_name").toString());
+                userService.join(newUser);
+                //홈화면
+                return "/starTroad";
             }
-
-            return result;
         }
         else {
             //accessToken 얻지 못함
             return "구글 로그인 토큰 요청 실패";
         }
-
     }
 }

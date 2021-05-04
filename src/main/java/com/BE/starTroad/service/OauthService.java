@@ -4,10 +4,8 @@ import com.BE.starTroad.helper.constants.SocialLoginType;
 import com.BE.starTroad.service.social.SocialOauth;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +17,7 @@ public class OauthService {
     //final어야함
     private final List<SocialOauth> socialOauthList;
     private final HttpServletResponse response;
+
 
     public void request(SocialLoginType socialLoginType) {
         SocialOauth socialOauth = this.findSocialOauthByType(socialLoginType);
