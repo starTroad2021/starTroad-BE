@@ -1,6 +1,6 @@
 package com.BE.starTroad.controller;
 
-public class UserForm {
+public class AddForm {
     private String name;
 
     public String getName() {
