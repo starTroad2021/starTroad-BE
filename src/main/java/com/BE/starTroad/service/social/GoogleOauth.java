@@ -25,8 +25,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-//@Component
-//@RequiredArgsConstructor
+@Component
+@RequiredArgsConstructor
 public class GoogleOauth implements SocialOauth {
 
     @Value("${sns.google.url}")

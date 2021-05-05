@@ -1,16 +1,20 @@
 package com.BE.starTroad.controller;
 
 import com.BE.starTroad.domain.User;
+import com.BE.starTroad.repository.JpaUserRepository;
 import com.BE.starTroad.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.persistence.EntityManager;
+import java.util.Optional;
+
 @Controller
 public class UserController {
 
-    private final UserService userService;
+    /*private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -26,5 +30,14 @@ public class UserController {
         userService.join(user);
 
         return ""; //등록 후 보낼 url
-    }
+    }*/
+    
+
+    /*@PostMapping(value="/login/add")
+    public String addInfo(AddForm form) {
+
+        User user = new User();
+        user.setName(form.getName());
+
+    }*/
 }
