@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface SpringDataJpaRoadmapRepository extends JpaRepository<Roadmap, Long> {
 
-
+    public Roadmap findById(int id);
     public List<Roadmap> findByNameLike(String name);
     public List<Roadmap> findByGenerator(String generator);
     public List<Roadmap> findByTagLike(String tag);

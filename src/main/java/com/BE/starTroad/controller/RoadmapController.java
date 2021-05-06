@@ -10,29 +10,71 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.text.html.Option;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/roadmap")
+@RequestMapping("/api/roadmap")
 public class RoadmapController {
 
     @Autowired
     JpaRoadmapService jpaRoadmapService;
 
     @PostMapping(value="/generator")
-    public ResponseEntity<Roadmap> generate(Roadmap roadmap) {
-        return new ResponseEntity<Roadmap>( jpaRoadmapService.save(roadmap), HttpStatus.OK);
+    public ResponseEntity<Roadmap> generate(RoadmapForm roadmap) {
+
+        String timestamp = roadmap.getCreated_at();
+        Timestamp time;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+            Date parsedDate = dateFormat.parse(timestamp);
+            time = new Timestamp(parsedDate.getTime());
+        } catch(Exception e) {
+            time = new Timestamp(System.currentTimeMillis());
+        }
+        Roadmap newRoadmap = new Roadmap();
+
+        newRoadmap.setName(roadmap.getName());
+        newRoadmap.setCreated_at(time);
+        newRoadmap.setTag(roadmap.getTag());
+        newRoadmap.setDescription(roadmap.getDescription());
+        newRoadmap.setOwner(roadmap.getOwner());
+        newRoadmap.setGenerator(roadmap.getGenerator());
+        newRoadmap.setInformation(roadmap.getInformation());
+        newRoadmap.setLike_count(roadmap.getLike_count());
+
+        return new ResponseEntity<Roadmap>(jpaRoadmapService.save(newRoadmap), HttpStatus.OK);
     }
 
-    @GetMapping(value="/{roadmap_id}")
-    public ResponseEntity<Roadmap> getInfo(@PathVariable("roadmap_id") Long mapId, Roadmap roadmap) {
-        Optional<Roadmap> rdmap = jpaRoadmapService.findById(mapId);
+    @GetMapping(value="/search")
+    public ResponseEntity<List<Roadmap>> search(String name, String tag) {
 
+        List<Roadmap> roadmapsName = new ArrayList<>();
+        List<Roadmap> roadmapsTag = new ArrayList<>();
+        List<Roadmap> roadmaps = new ArrayList<>();
+
+        roadmapsName = jpaRoadmapService.findByName(name);
+        roadmapsTag = jpaRoadmapService.findByTag(tag);
+
+        roadmaps.addAll(roadmapsName);
+        roadmaps.addAll(roadmapsTag);
+
+        return new ResponseEntity<List<Roadmap>> (roadmaps, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/detail/{roadmap_id}")
+    public ResponseEntity<Roadmap> getInfo(@PathVariable("roadmap_id") Long mapId) {
+        Optional<Roadmap> rdmap = jpaRoadmapService.findById(mapId);
         if (rdmap.isPresent()) {
-            return new ResponseEntity<Roadmap>(rdmap.get(),HttpStatus.OK);
+            Roadmap roadmap = rdmap.get();
+            return new ResponseEntity<Roadmap>(roadmap,HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<Roadmap>((Roadmap)null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -44,7 +86,7 @@ public class RoadmapController {
             return new ResponseEntity<Roadmap>(roadmap, HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<Roadmap>((Roadmap)null, HttpStatus.OK);
+            return new ResponseEntity<>(null, HttpStatus.OK);
         }
 
     }
@@ -62,7 +104,7 @@ public class RoadmapController {
             return new ResponseEntity<Roadmap>(roadmap, HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<Roadmap>((Roadmap) null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
     }

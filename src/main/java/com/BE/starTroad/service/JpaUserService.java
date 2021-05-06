@@ -26,17 +26,21 @@ public class JpaUserService {
         return user;
     }
     //업데이트 (수정)
-    public void update(String email, User user) {
+    public User update(String email, User user) {
         Optional<User> dbUser = springDataJpaUserRepository.findByEmail(email);
 
         if (dbUser.isPresent()) {
             dbUser.get().setEmail(email);
-            dbUser.get().setName(user.getName());
+            dbUser.get().setName(dbUser.get().getName());
             dbUser.get().setBirth(user.getBirth());
             dbUser.get().setMessage(user.getMessage());
             dbUser.get().setMajor(user.getMajor());
             dbUser.get().setInterest(user.getInterest());
-            springDataJpaUserRepository.save(user);
+            springDataJpaUserRepository.save(dbUser.get());
+            return dbUser.get();
+        }
+        else {
+            return null;
         }
     }
 

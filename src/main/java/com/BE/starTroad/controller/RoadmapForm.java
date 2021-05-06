@@ -1,24 +1,15 @@
-package com.BE.starTroad.domain;
-
+package com.BE.starTroad.controller;
 
 import org.json.simple.JSONObject;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.sql.Time;
 import java.sql.Timestamp;
 
-@Entity(name="roadmap")
-public class Roadmap {
+public class RoadmapForm {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     private String name;
-    private Timestamp created_at;
+    private String created_at;
     private String tag;
     private String description;
     private String owner;
@@ -27,11 +18,11 @@ public class Roadmap {
     private int like_count;
     private String image;
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -43,11 +34,11 @@ public class Roadmap {
         this.name = name;
     }
 
-    public Timestamp getCreated_at() {
+    public String getCreated_at() {
         return created_at;
     }
 
-    public void setCreated_at(Timestamp created_at) {
+    public void setCreated_at(String created_at) {
         this.created_at = created_at;
     }
 
@@ -98,14 +89,4 @@ public class Roadmap {
     public void setLike_count(int like_count) {
         this.like_count = like_count;
     }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-
 }

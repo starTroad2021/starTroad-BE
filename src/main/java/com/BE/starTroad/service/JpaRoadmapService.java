@@ -61,13 +61,13 @@ public class JpaRoadmapService {
     //로드맵 이름으로 조회
     public List<Roadmap> findByName(String name) {
         List<Roadmap> roadmaps = new ArrayList<>();
-        springDataJpaRoadmapRepository.findByNameLike(name).forEach(e -> roadmaps.add(e));
+        springDataJpaRoadmapRepository.findByNameLike("%"+name+"%").forEach(e -> roadmaps.add(e));
         return roadmaps;
     }
     //로드맵 태그로 조회
     public List<Roadmap> findByTag(String tag) {
         List<Roadmap> roadmaps = new ArrayList<>();
-        springDataJpaRoadmapRepository.findByTagLike(tag).forEach(e -> roadmaps.add(e));
+        springDataJpaRoadmapRepository.findByTagLike("%"+tag+"%").forEach(e -> roadmaps.add(e));
         return roadmaps;
     }
     //로드맵 포크하기
