@@ -31,15 +31,22 @@ public class HomeController {
     public ResponseEntity<List<Roadmap>> home(@PathVariable("user_email") String email) {
 
         Optional<User> user = springDataJpaUserRepository.findByEmail(email);
-        String tags = user.get().getInterest();
-        List<Roadmap> roadmaps = springDataJpaRoadmapRepository.findByTagLike(tags);
-
-        if (roadmaps.isEmpty()) { //interest가 비어있으면 그냥 좋아요 수 높은 거로 sort 해서
-            System.out.println("hi");
-            roadmaps = springDataJpaRoadmapRepository.findAll(Sort.by("like_count"));
+        if (user.isPresent()) {
+            String tags = user.get().getInterest();
+            if (tags != null) {
+                List<Roadmap> roadmaps = springDataJpaRoadmapRepository.findByTagLike(tags);
+                if (roadmaps.isEmpty()) { //태그에 해당하는게 없으면
+                    roadmaps = springDataJpaRoadmapRepository.findAll();
+                    return new ResponseEntity<List<Roadmap>>(roadmaps, HttpStatus.OK);
+                }
+            }
+            else {
+                List<Roadmap> roadmaps = springDataJpaRoadmapRepository.findAll();
+                return new ResponseEntity<List<Roadmap>>(roadmaps, HttpStatus.OK);
+            }
         }
-        System.out.println("hello");
-        return new ResponseEntity<List<Roadmap>>(roadmaps, HttpStatus.OK);
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+
     }
 
 }

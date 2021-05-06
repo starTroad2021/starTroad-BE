@@ -48,8 +48,9 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
-    @PostMapping(value="/{user_email}")
-    public ResponseEntity<User> saveInfo(@PathVariable("user_email") String email, User user) {
+    @PutMapping(value="/{user_email}")
+    public ResponseEntity<User> saveInfo(@PathVariable("user_email")String email, User user) {
+
         User updateUser = jpaUserService.update(email, user);
 
         if (updateUser != null) {

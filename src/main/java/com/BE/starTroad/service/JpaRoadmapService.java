@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,10 +30,10 @@ public class JpaRoadmapService {
     public Roadmap update(Long id, Roadmap roadmap) {
         Optional<Roadmap> dbRoadmap = springDataJpaRoadmapRepository.findById(id);
 
-        int intId = id.intValue();
+        //int intId = id.intValue();
 
         if (dbRoadmap.isPresent()) {
-            dbRoadmap.get().setId(intId);
+            dbRoadmap.get().setId(id);
             dbRoadmap.get().setName(roadmap.getName());
             dbRoadmap.get().setCreated_at(roadmap.getCreated_at());
             dbRoadmap.get().setTag(roadmap.getTag());
@@ -74,12 +76,18 @@ public class JpaRoadmapService {
     public Roadmap forkRoadmap(String email, Roadmap roadmap) {
 
         Long mapID = (long) roadmap.getId();
+        Timestamp time = new Timestamp(System.currentTimeMillis());
         if (springDataJpaUserRepository.findByEmail(email).isPresent()) { //fork 하려는 사람이 존재하는지
 
             if (springDataJpaRoadmapRepository.findById(mapID).isPresent()) { //받은 roadmap이 존재하는지
                 Roadmap newRoadmap = new Roadmap();
                 newRoadmap.setOwner(email);
-
+                newRoadmap.setName(roadmap.getName());
+                newRoadmap.setTag(roadmap.getTag());
+                newRoadmap.setDescription(roadmap.getDescription());
+                newRoadmap.setGenerator(roadmap.getGenerator());
+                newRoadmap.setInformation(roadmap.getInformation());
+                newRoadmap.setCreated_at(time);
                 try {
                     springDataJpaRoadmapRepository.save(newRoadmap);
                     return newRoadmap;

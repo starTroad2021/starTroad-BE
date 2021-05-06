@@ -4,11 +4,16 @@ import com.BE.starTroad.domain.Roadmap;
 import com.BE.starTroad.domain.User;
 import com.BE.starTroad.service.JpaRoadmapService;
 import org.hibernate.engine.query.spi.OrdinalParameterDescriptor;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.attribute.standard.JobSheets;
 import javax.swing.text.html.Option;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -24,7 +29,7 @@ public class RoadmapController {
     @Autowired
     JpaRoadmapService jpaRoadmapService;
 
-    @PostMapping(value="/generator")
+    @PostMapping(value="/generate")
     public ResponseEntity<Roadmap> generate(RoadmapForm roadmap) {
 
         String timestamp = roadmap.getCreated_at();
@@ -66,7 +71,7 @@ public class RoadmapController {
         return new ResponseEntity<List<Roadmap>> (roadmaps, HttpStatus.OK);
     }
 
-    @GetMapping(value="/detail/{roadmap_id}")
+    @GetMapping(value="/{roadmap_id}")
     public ResponseEntity<Roadmap> getInfo(@PathVariable("roadmap_id") Long mapId) {
         Optional<Roadmap> rdmap = jpaRoadmapService.findById(mapId);
         if (rdmap.isPresent()) {
@@ -79,11 +84,32 @@ public class RoadmapController {
     }
 
     @PutMapping(value="/modify/{roadmap_id}")
-    public ResponseEntity<Roadmap> modify(@PathVariable("roadmap_id") Long mapId, Roadmap roadmap) {
-        Roadmap rdmap = jpaRoadmapService.update(mapId, roadmap);
+    public ResponseEntity<Roadmap> modify(@PathVariable("roadmap_id") Long mapId, RoadmapForm roadmap) {
+
+        String timestamp = roadmap.getCreated_at();
+        Timestamp time;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+            Date parsedDate = dateFormat.parse(timestamp);
+            time = new Timestamp(parsedDate.getTime());
+        } catch(Exception e) {
+            time = new Timestamp(System.currentTimeMillis());
+        }
+        Roadmap newRoadmap = new Roadmap();
+
+        newRoadmap.setName(roadmap.getName());
+        newRoadmap.setCreated_at(time);
+        newRoadmap.setTag(roadmap.getTag());
+        newRoadmap.setDescription(roadmap.getDescription());
+        newRoadmap.setOwner(roadmap.getOwner());
+        newRoadmap.setGenerator(roadmap.getGenerator());
+        newRoadmap.setInformation(roadmap.getInformation());
+        newRoadmap.setLike_count(roadmap.getLike_count());
+
+        Roadmap rdmap = jpaRoadmapService.update(mapId, newRoadmap);
 
         if (rdmap != null) {
-            return new ResponseEntity<Roadmap>(roadmap, HttpStatus.OK);
+            return new ResponseEntity<Roadmap>(rdmap, HttpStatus.OK);
         }
         else {
             return new ResponseEntity<>(null, HttpStatus.OK);
@@ -92,37 +118,75 @@ public class RoadmapController {
     }
 
     @PostMapping(value="/fork")
-    public ResponseEntity<Roadmap> fork(Roadmap roadmap) {
+    public ResponseEntity<Roadmap> fork(Long id) {
 
         //유저의 이메일이 필요한데 어캐 가져오지
         //starTroad 토큰 복호해서 이메일 까야하나? ㄹㅇ 모르겠음
-        String email = "";
         Roadmap rdmap = new Roadmap();
-        rdmap = jpaRoadmapService.forkRoadmap(email,roadmap);
+        String email = "test@test.com"; //임시
+        System.out.println(id);
+        Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
 
-        if (rdmap != null) {
-            return new ResponseEntity<Roadmap>(roadmap, HttpStatus.OK);
+        if (roadmap.isPresent()) {
+            rdmap = jpaRoadmapService.forkRoadmap(email, roadmap.get());
+
+            if (rdmap != null) {
+                return new ResponseEntity<Roadmap>(rdmap, HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
         }
         else {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+
         }
+
+
 
     }
 
     @PostMapping(value="/like")
-    public ResponseEntity<Roadmap> like(Roadmap roadmap) {
+    public ResponseEntity<Roadmap> like(Long id) {
 
-        jpaRoadmapService.upCount(roadmap);
+        Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
 
-        return new ResponseEntity<Roadmap>(roadmap, HttpStatus.OK);
+        if (roadmap.isPresent()) {
+            jpaRoadmapService.upCount(roadmap.get());
+            return new ResponseEntity<Roadmap>(roadmap.get(), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<Roadmap>(roadmap.get(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping(value="/unlike")
-    public ResponseEntity<Roadmap> unlike(Roadmap roadmap) {
-        jpaRoadmapService.downCount(roadmap);
+    public ResponseEntity<Roadmap> unlike(Long id) {
 
-        return new ResponseEntity<Roadmap>(roadmap, HttpStatus.OK);
+        Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
+
+        if (roadmap.isPresent()) {
+            jpaRoadmapService.downCount(roadmap.get());
+            return new ResponseEntity<Roadmap>(roadmap.get(), HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<Roadmap>(roadmap.get(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
+    @GetMapping(value="/detail/{roadmap_id}")
+    public ResponseEntity<String> getDetail(@PathVariable("roadmap_id") Long id) {
+
+        Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
+        String detail = "";
+        if (roadmap.isPresent()) {
+            detail = roadmap.get().getDescription();
+            return new ResponseEntity<String>(detail, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
 }
