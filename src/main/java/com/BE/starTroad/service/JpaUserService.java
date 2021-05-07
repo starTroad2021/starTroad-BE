@@ -30,8 +30,6 @@ public class JpaUserService {
         Optional<User> dbUser = springDataJpaUserRepository.findByEmail(email);
 
         if (dbUser.isPresent()) {
-            dbUser.get().setEmail(email);
-            dbUser.get().setName(dbUser.get().getName());
             dbUser.get().setBirth(user.getBirth());
             dbUser.get().setMessage(user.getMessage());
             dbUser.get().setMajor(user.getMajor());

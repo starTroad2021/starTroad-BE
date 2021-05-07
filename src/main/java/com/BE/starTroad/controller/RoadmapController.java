@@ -1,5 +1,6 @@
 package com.BE.starTroad.controller;
 
+import com.BE.starTroad.config.JwtTokenUtil;
 import com.BE.starTroad.domain.Roadmap;
 import com.BE.starTroad.domain.User;
 import com.BE.starTroad.service.JpaRoadmapService;
@@ -28,9 +29,20 @@ public class RoadmapController {
 
     @Autowired
     JpaRoadmapService jpaRoadmapService;
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
 
     @PostMapping(value="/generate")
-    public ResponseEntity<Roadmap> generate(RoadmapForm roadmap) {
+    public ResponseEntity<Roadmap> generate(RoadmapForm roadmap, @RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+
+        String roadmapGenerater = roadmap.getGenerator();
+
+        if (!(tokenOwner.equals(roadmapGenerater))) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
 
         String timestamp = roadmap.getCreated_at();
         Timestamp time;
@@ -47,8 +59,8 @@ public class RoadmapController {
         newRoadmap.setCreated_at(time);
         newRoadmap.setTag(roadmap.getTag());
         newRoadmap.setDescription(roadmap.getDescription());
-        newRoadmap.setOwner(roadmap.getOwner());
-        newRoadmap.setGenerator(roadmap.getGenerator());
+        newRoadmap.setOwner(tokenOwner);
+        newRoadmap.setGenerator(tokenOwner);
         newRoadmap.setInformation(roadmap.getInformation());
         newRoadmap.setLike_count(roadmap.getLike_count());
 
@@ -84,7 +96,19 @@ public class RoadmapController {
     }
 
     @PutMapping(value="/modify/{roadmap_id}")
-    public ResponseEntity<Roadmap> modify(@PathVariable("roadmap_id") Long mapId, RoadmapForm roadmap) {
+    public ResponseEntity<Roadmap> modify(@PathVariable("roadmap_id") Long mapId, RoadmapForm roadmap,
+                                          @RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+        Optional<Roadmap> rdMap = jpaRoadmapService.findById(mapId);
+        String roadMapOwner = "";
+        if (rdMap.isPresent()) {
+            roadMapOwner = rdMap.get().getOwner();
+        }
+        if (tokenOwner != roadMapOwner) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
 
         String timestamp = roadmap.getCreated_at();
         Timestamp time;
@@ -118,17 +142,17 @@ public class RoadmapController {
     }
 
     @PostMapping(value="/fork")
-    public ResponseEntity<Roadmap> fork(Long id) {
+    public ResponseEntity<Roadmap> fork(Long id, @RequestHeader("Authorization") String token) {
 
-        //유저의 이메일이 필요한데 어캐 가져오지
-        //starTroad 토큰 복호해서 이메일 까야하나? ㄹㅇ 모르겠음
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+
         Roadmap rdmap = new Roadmap();
-        String email = "test@test.com"; //임시
         System.out.println(id);
         Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
 
         if (roadmap.isPresent()) {
-            rdmap = jpaRoadmapService.forkRoadmap(email, roadmap.get());
+            rdmap = jpaRoadmapService.forkRoadmap(tokenOwner, roadmap.get());
 
             if (rdmap != null) {
                 return new ResponseEntity<Roadmap>(rdmap, HttpStatus.OK);
@@ -139,11 +163,7 @@ public class RoadmapController {
         }
         else {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-
         }
-
-
-
     }
 
     @PostMapping(value="/like")
@@ -175,18 +195,5 @@ public class RoadmapController {
 
     }
 
-    @GetMapping(value="/detail/{roadmap_id}")
-    public ResponseEntity<String> getDetail(@PathVariable("roadmap_id") Long id) {
-
-        Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
-        String detail = "";
-        if (roadmap.isPresent()) {
-            detail = roadmap.get().getDescription();
-            return new ResponseEntity<String>(detail, HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-    }
 
 }

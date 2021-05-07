@@ -42,7 +42,7 @@ public class JpaRoadmapService {
             dbRoadmap.get().setGenerator(roadmap.getGenerator());
             dbRoadmap.get().setInformation(roadmap.getInformation());
             dbRoadmap.get().setLike_count(roadmap.getLike_count());
-            springDataJpaRoadmapRepository.save(roadmap);
+            springDataJpaRoadmapRepository.save(dbRoadmap.get());
             return roadmap;
         }
         else {

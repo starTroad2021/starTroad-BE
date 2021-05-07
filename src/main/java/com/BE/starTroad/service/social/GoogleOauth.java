@@ -80,7 +80,6 @@ public class GoogleOauth implements SocialOauth {
             JSONParser parser = new JSONParser();
             JSONObject obj = null;
 
-            System.out.println(jsonStr);
 
             try {
                 obj = (JSONObject)parser.parse(jsonStr);
@@ -92,7 +91,14 @@ public class GoogleOauth implements SocialOauth {
             JsonNode userInfo = null;
 
             String user_AT = obj.get("access_token").toString();
-            //String user_RT = obj.get("refresh_token").toString();
+            String user_RT = "";
+
+            try {
+                user_RT = obj.get("refresh_token").toString();
+            } catch (Exception e) {
+                user_RT = "";
+            }
+
             userInfo = getUserInfo(user_AT);
 
 
@@ -100,20 +106,13 @@ public class GoogleOauth implements SocialOauth {
             String user_name = userInfo.get("name").toString();
             String user_email = userInfo.get("email").toString();
 
-            System.out.println("user info ----------");
-            System.out.println(user_id);
-            System.out.println(user_name);
-            System.out.println(user_email);
-            System.out.println(user_AT);
-            //System.out.println(user_RT);
-
             JSONObject user = new JSONObject();
 
             user.put("user_id",user_id);
             user.put("user_name",user_name);
             user.put("user_email",user_email);
             user.put("user_AT",user_AT);
-            //user.put("user_RT",user_RT);
+            user.put("user_RT",user_RT);
 
             String userInfoStr = user.toString();
 

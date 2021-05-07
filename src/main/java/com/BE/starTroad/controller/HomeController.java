@@ -1,5 +1,6 @@
 package com.BE.starTroad.controller;
 
+import com.BE.starTroad.config.JwtTokenUtil;
 import com.BE.starTroad.domain.Roadmap;
 import com.BE.starTroad.domain.User;
 import com.BE.starTroad.repository.SpringDataJpaRoadmapRepository;
@@ -10,10 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,9 +24,20 @@ public class HomeController {
     private SpringDataJpaUserRepository springDataJpaUserRepository;
     @Autowired
     private SpringDataJpaRoadmapRepository springDataJpaRoadmapRepository;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @GetMapping("/{user_email}")
-    public ResponseEntity<List<Roadmap>> home(@PathVariable("user_email") String email) {
+    public ResponseEntity<List<Roadmap>> home(@PathVariable("user_email") String email, @RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+        System.out.println("hi token owner : "+tokenOwner);
+        System.out.println("hi login user : "+email);
+
+        if (!(tokenOwner.equals(email))) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
 
         Optional<User> user = springDataJpaUserRepository.findByEmail(email);
         if (user.isPresent()) {

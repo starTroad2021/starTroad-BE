@@ -1,16 +1,19 @@
 package com.BE.starTroad.domain;
 
 import org.json.simple.JSONObject;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.annotation.processing.Generated;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Collection;
 
 
 @Entity(name="user")
-public class User {
+public class User implements UserDetails {
 
     @Id
     private String email;
@@ -87,5 +90,39 @@ public class User {
     public void setRefreshToken(String refreshToken) {
         this.refresh_token = refreshToken;
     }
-    
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return this.email;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.name;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return false;
+    }
 }

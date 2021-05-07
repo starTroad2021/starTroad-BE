@@ -1,5 +1,6 @@
 package com.BE.starTroad.controller;
 
+import com.BE.starTroad.config.JwtTokenUtil;
 import com.BE.starTroad.domain.Roadmap;
 import com.BE.starTroad.domain.User;
 import com.BE.starTroad.repository.JpaUserRepository;
@@ -7,13 +8,16 @@ import com.BE.starTroad.service.JpaUserService;
 import com.BE.starTroad.service.UserService;
 import org.apache.naming.factory.SendMailFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
 import javax.swing.text.html.Option;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -23,10 +27,23 @@ public class UserController {
     @Autowired
     JpaUserService jpaUserService;
 
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
+
     @PostMapping(value="/login/add")
-    public ResponseEntity<User> addInfo(User user){
+    public ResponseEntity<User> addInfo(User user, @RequestHeader("Authorization") String token){
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
         String email = user.getEmail();
+        System.out.println(tokenOwner);
+        System.out.println(email);
+
+        if (!(tokenOwner.equals(email))) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
         User updateUser = jpaUserService.update(email, user);
 
         if (updateUser != null) {
@@ -38,8 +55,16 @@ public class UserController {
     }
 
     @GetMapping(value="/{user_email}")
-    public ResponseEntity<User> getInfo(@PathVariable("user_email") String email) {
+    public ResponseEntity<User> getInfo(@PathVariable("user_email") String email,
+                                        @RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
         Optional<User> findUser = jpaUserService.findByEmail(email);
+
+        if (!(tokenOwner.equals(email))) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
 
         if (findUser.isPresent()) {
             return new ResponseEntity<User>(findUser.get(), HttpStatus.OK);
@@ -47,9 +72,20 @@ public class UserController {
         else {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
+
     }
+
     @PutMapping(value="/{user_email}")
-    public ResponseEntity<User> saveInfo(@PathVariable("user_email")String email, User user) {
+    public ResponseEntity<User> saveInfo(@PathVariable("user_email")String email, User user,
+                                         @RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+        Optional<User> findUser = jpaUserService.findByEmail(email);
+
+        if (!(tokenOwner.equals(email))) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
 
         User updateUser = jpaUserService.update(email, user);
 
