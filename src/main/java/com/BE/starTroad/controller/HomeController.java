@@ -27,19 +27,13 @@ public class HomeController {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @GetMapping("/{user_email}")
-    public ResponseEntity<List<Roadmap>> home(@PathVariable("user_email") String email, @RequestHeader("Authorization") String token) {
+    @GetMapping("/")
+    public ResponseEntity<List<Roadmap>> home(@RequestHeader("Authorization") String token) {
 
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
-        System.out.println("hi token owner : "+tokenOwner);
-        System.out.println("hi login user : "+email);
 
-        if (!(tokenOwner.equals(email))) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }
-
-        Optional<User> user = springDataJpaUserRepository.findByEmail(email);
+        Optional<User> user = springDataJpaUserRepository.findByEmail(tokenOwner);
         if (user.isPresent()) {
             String tags = user.get().getInterest();
             if (tags != null) {
