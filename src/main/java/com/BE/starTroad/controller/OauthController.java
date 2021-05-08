@@ -29,7 +29,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping(value="/auth")
+@RequestMapping(value="/api/auth")
 @Slf4j
 public class OauthController {
 

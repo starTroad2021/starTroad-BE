@@ -54,17 +54,12 @@ public class UserController {
         }
     }
 
-    @GetMapping(value="/{user_email}")
-    public ResponseEntity<User> getInfo(@PathVariable("user_email") String email,
-                                        @RequestHeader("Authorization") String token) {
+    @GetMapping(value="/")
+    public ResponseEntity<User> getInfo(@RequestHeader("Authorization") String token) {
 
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
-        Optional<User> findUser = jpaUserService.findByEmail(email);
-
-        if (!(tokenOwner.equals(email))) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }
+        Optional<User> findUser = jpaUserService.findByEmail(tokenOwner);
 
         if (findUser.isPresent()) {
             return new ResponseEntity<User>(findUser.get(), HttpStatus.OK);
