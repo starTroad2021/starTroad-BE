@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+//not in use
 @Transactional
 public class UserService {
 
@@ -37,8 +38,11 @@ public class UserService {
         return userRepository.findAll();
 
     }
+    //이메일로 사람 찾기
 
-    public Optional<User> findOne(String email) {
-        return userRepository.findById(email);
-    }
+    //추가정보 입력
+
+    /*public User updateUser(User user) {
+        return userRepository.update(user);
+    }*/
 }

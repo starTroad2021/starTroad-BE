@@ -35,24 +35,25 @@ public class SpringConfig {
 
     }
 
-    @Bean
+    /*@Bean
     public UserService userService() {
         return new UserService(userRepository());
     }
-
-    @Bean
+    */
+    /*@Bean
     public UserRepository userRepository() {
         return new JpaUserRepository(em);
-    }
-
+    }*/
+/*
     @Bean
     public SocialLoginTypeConverter socialLoginTypeConverter() {
         return new SocialLoginTypeConverter();
     }
-
+*/
+    /*
     @Bean
     public GoogleOauth googleOauth() {
         return new GoogleOauth();
     }
-
+*/
 }

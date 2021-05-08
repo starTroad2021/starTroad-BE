@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
+//not in use
 public class JpaUserRepository implements UserRepository{
 
     private final EntityManager em;
@@ -21,9 +22,14 @@ public class JpaUserRepository implements UserRepository{
         return user;
     }
 
-    public Optional<User> findById(String email) {
+    public User findById(String email) {
         User user = em.find(User.class, email);
-        return Optional.ofNullable(user);
+        if (user != null) {
+            return user;
+        }
+        else {
+            return null;
+        }
     }
 
     public List<User> findAll() {

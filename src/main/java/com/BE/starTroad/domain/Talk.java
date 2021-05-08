@@ -1,27 +1,23 @@
 package com.BE.starTroad.domain;
 
-import org.hibernate.resource.jdbc.spi.JdbcSessionOwner;
-import org.json.simple.JSONObject;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.sql.Timestamp;
 
-@Entity(name="study")
-public class Study {
+@Entity(name="talk")
+public class Talk {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
-    private int follow_map;
     private Timestamp created_at;
+    private int talk_roadmap;
+    private String talk_writer;
     private String description;
-    private int max_num;
-    private JSONObject member;
     private int status;
 
     public int getId() {
@@ -40,20 +36,28 @@ public class Study {
         this.name = name;
     }
 
-    public int getFollow_map() {
-        return follow_map;
-    }
-
-    public void setFollow_map(int follow_map) {
-        this.follow_map = follow_map;
-    }
-
     public Timestamp getCreated_at() {
         return created_at;
     }
 
     public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
+    }
+
+    public int getTalk_roadmap() {
+        return talk_roadmap;
+    }
+
+    public void setTalk_roadmap(int talk_roadmap) {
+        this.talk_roadmap = talk_roadmap;
+    }
+
+    public String getTalk_writer() {
+        return talk_writer;
+    }
+
+    public void setTalk_writer(String talk_writer) {
+        this.talk_writer = talk_writer;
     }
 
     public String getDescription() {
@@ -64,22 +68,6 @@ public class Study {
         this.description = description;
     }
 
-    public int getMax_num() {
-        return max_num;
-    }
-
-    public void setMax_num(int max_num) {
-        this.max_num = max_num;
-    }
-
-    public JSONObject getMember() {
-        return member;
-    }
-
-    public void setMember(JSONObject member) {
-        this.member = member;
-    }
-
     public int getStatus() {
         return status;
     }
@@ -87,6 +75,4 @@ public class Study {
     public void setStatus(int status) {
         this.status = status;
     }
-
-
 }

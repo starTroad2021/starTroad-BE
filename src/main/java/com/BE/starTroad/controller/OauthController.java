@@ -1,19 +1,29 @@
 package com.BE.starTroad.controller;
 
+import com.BE.starTroad.config.JwtTokenUtil;
+import com.BE.starTroad.domain.JwtRequest;
+import com.BE.starTroad.domain.JwtResponse;
 import com.BE.starTroad.domain.User;
 import com.BE.starTroad.helper.constants.SocialLoginType;
 import com.BE.starTroad.repository.JpaUserRepository;
-import com.BE.starTroad.service.OauthService;
-import com.BE.starTroad.service.UserService;
+import com.BE.starTroad.service.*;
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.protocol.HTTP;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 
 @RestController
@@ -25,8 +35,15 @@ public class OauthController {
 
     @Autowired
     private OauthService oauthService;
+    //@Autowired
+    //private UserService userService;
     @Autowired
-    private UserService userService;
+    private JpaUserService jpaUserService;
+
+    @Autowired
+    private JwtTokenService jwtTokenService;
+
+
 
     @GetMapping(value = "/{socialLoginType}")
     public void socialLoginType(
@@ -42,7 +59,7 @@ public class OauthController {
     }
 
     @GetMapping(value ="/{socialLoginType}/callback")
-    public String callback(
+    public ResponseEntity<?> callback(
             @PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
             @RequestParam(name ="code") String code) throws ParseException {
         System.out.println(">> 소셜 로그인 서버로부터 받은 code : " + code);
@@ -56,25 +73,36 @@ public class OauthController {
             JSONObject jsonObj = (JSONObject) obj;
 
             String email = jsonObj.get("user_email").toString();
+            String name = jsonObj.get("user_name").toString();
+            int length = email.length();
+            email = email.substring(1,length-1);
+            length = name.length();
+            name = name.substring(1,length-1);
+            Optional<User> dbUser = jpaUserService.findByEmail(email);
 
-            if (userService.findOne(email).isPresent()) {
+            if (dbUser.isPresent()) {
                 System.out.println("Already registered USER");
-                //홈화면
-                return "/starTroad";
             }
             else {
                 System.out.println("new USER");
                 User newUser = new User();
+                //이메일이랑 이름 뒤에 "" 떼기
                 newUser.setEmail(email);
-                newUser.setName(jsonObj.get("user_name").toString());
-                userService.join(newUser);
-                //홈화면
-                return "/starTroad";
+                newUser.setName(name);
+                jpaUserService.save(newUser);
+                }
+
+            final String token = jwtTokenService.createJwtToken(email,name);
+            if(token == null) { //token 생성이 안된 경우
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            else {
+                return ResponseEntity.ok(new JwtResponse(token));
             }
         }
         else {
             //accessToken 얻지 못함
-            return "구글 로그인 토큰 요청 실패";
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 }
