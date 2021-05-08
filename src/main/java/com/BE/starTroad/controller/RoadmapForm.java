@@ -11,12 +11,14 @@ public class RoadmapForm {
     private String name;
     private String created_at;
     private String tag;
+    private String summary;
     private String description;
     private String owner;
     private String generator;
     private String information;
     private int like_count;
     private String image;
+    private String valid;
 
     public int getId() {
         return id;
@@ -48,6 +50,14 @@ public class RoadmapForm {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getDescription() {
@@ -88,5 +98,21 @@ public class RoadmapForm {
 
     public void setLike_count(int like_count) {
         this.like_count = like_count;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getValid() {
+        return valid;
+    }
+
+    public void setValid(String valid) {
+        this.valid = valid;
     }
 }

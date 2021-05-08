@@ -20,6 +20,7 @@ public class Roadmap {
     private String name;
     private Timestamp created_at;
     private String tag;
+    private String summary;
     private String description;
     private String owner;
     private String generator;
@@ -57,6 +58,15 @@ public class Roadmap {
 
     public void setTag(String tag) {
         this.tag = tag;
+    }
+
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public String getDescription() {

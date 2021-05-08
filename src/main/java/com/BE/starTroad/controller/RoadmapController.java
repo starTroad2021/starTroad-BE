@@ -38,9 +38,9 @@ public class RoadmapController {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
-        String roadmapGenerater = roadmap.getGenerator();
+        String roadmapGenerator = roadmap.getGenerator();
 
-        if (!(tokenOwner.equals(roadmapGenerater))) {
+        if (!(tokenOwner.equals(roadmapGenerator))) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
 
@@ -58,11 +58,13 @@ public class RoadmapController {
         newRoadmap.setName(roadmap.getName());
         newRoadmap.setCreated_at(time);
         newRoadmap.setTag(roadmap.getTag());
+        newRoadmap.setSummary(roadmap.getSummary());
         newRoadmap.setDescription(roadmap.getDescription());
         newRoadmap.setOwner(tokenOwner);
         newRoadmap.setGenerator(tokenOwner);
         newRoadmap.setInformation(roadmap.getInformation());
         newRoadmap.setLike_count(roadmap.getLike_count());
+        newRoadmap.setImage(roadmap.getImage());
 
         return new ResponseEntity<Roadmap>(jpaRoadmapService.save(newRoadmap), HttpStatus.OK);
     }
@@ -84,11 +86,36 @@ public class RoadmapController {
     }
 
     @GetMapping(value="/{roadmap_id}")
-    public ResponseEntity<Roadmap> getInfo(@PathVariable("roadmap_id") Long mapId) {
+    public ResponseEntity<RoadmapForm> getInfo(@PathVariable("roadmap_id") Long mapId, @RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+
         Optional<Roadmap> rdmap = jpaRoadmapService.findById(mapId);
+
+        RoadmapForm rdform = new RoadmapForm();
         if (rdmap.isPresent()) {
             Roadmap roadmap = rdmap.get();
-            return new ResponseEntity<Roadmap>(roadmap,HttpStatus.OK);
+            rdform.setId(mapId.intValue());
+            rdform.setName(rdmap.get().getName());
+            rdform.setCreated_at(rdmap.get().getCreated_at().toString());
+            rdform.setTag(rdmap.get().getTag());
+            rdform.setSummary(rdmap.get().getSummary());
+            rdform.setDescription(rdmap.get().getDescription());
+            rdform.setOwner(rdmap.get().getOwner());
+            rdform.setGenerator(rdmap.get().getGenerator());
+            rdform.setInformation(rdmap.get().getInformation());
+            rdform.setLike_count(rdmap.get().getLike_count());
+            rdform.setImage(rdmap.get().getImage());
+
+            if (rdmap.get().getOwner().equals(tokenOwner)) {
+                rdform.setValid("yes");
+            }
+            else {
+                rdform.setValid("no");
+            }
+
+            return new ResponseEntity<RoadmapForm>(rdform,HttpStatus.OK);
         }
         else {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -107,7 +134,7 @@ public class RoadmapController {
             roadMapOwner = rdMap.get().getOwner();
         }
         if (tokenOwner != roadMapOwner) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
 
         String timestamp = roadmap.getCreated_at();
@@ -124,11 +151,13 @@ public class RoadmapController {
         newRoadmap.setName(roadmap.getName());
         newRoadmap.setCreated_at(time);
         newRoadmap.setTag(roadmap.getTag());
+        newRoadmap.setSummary(roadmap.getSummary());
         newRoadmap.setDescription(roadmap.getDescription());
         newRoadmap.setOwner(roadmap.getOwner());
         newRoadmap.setGenerator(roadmap.getGenerator());
         newRoadmap.setInformation(roadmap.getInformation());
         newRoadmap.setLike_count(roadmap.getLike_count());
+        newRoadmap.setImage(roadmap.getImage());
 
         Roadmap rdmap = jpaRoadmapService.update(mapId, newRoadmap);
 
