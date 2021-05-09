@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/roadmap")
 public class RoadmapController {
@@ -129,11 +130,12 @@ public class RoadmapController {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
         Optional<Roadmap> rdMap = jpaRoadmapService.findById(mapId);
-        String roadMapOwner = "";
+        String roadmapOwner = "";
+
         if (rdMap.isPresent()) {
-            roadMapOwner = rdMap.get().getOwner();
+            roadmapOwner = rdMap.get().getOwner();
         }
-        if (tokenOwner != roadMapOwner) {
+        if (!(tokenOwner.equals(roadmapOwner))) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
 
@@ -153,8 +155,8 @@ public class RoadmapController {
         newRoadmap.setTag(roadmap.getTag());
         newRoadmap.setSummary(roadmap.getSummary());
         newRoadmap.setDescription(roadmap.getDescription());
-        newRoadmap.setOwner(roadmap.getOwner());
-        newRoadmap.setGenerator(roadmap.getGenerator());
+        newRoadmap.setOwner(roadmapOwner);
+        newRoadmap.setGenerator(rdMap.get().getGenerator());
         newRoadmap.setInformation(roadmap.getInformation());
         newRoadmap.setLike_count(roadmap.getLike_count());
         newRoadmap.setImage(roadmap.getImage());

@@ -20,6 +20,8 @@ import javax.swing.text.html.Option;
 import java.util.Map;
 import java.util.Optional;
 
+
+@CrossOrigin
 @RestController
 @RequestMapping("/api/user")
 public class UserController {

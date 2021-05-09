@@ -26,8 +26,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 
-@RestController
 @CrossOrigin
+@RestController
 @RequiredArgsConstructor
 @RequestMapping(value="/api/auth")
 @Slf4j
@@ -42,7 +42,6 @@ public class OauthController {
 
     @Autowired
     private JwtTokenService jwtTokenService;
-
 
 
     @GetMapping(value = "/{socialLoginType}")
