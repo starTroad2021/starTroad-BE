@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 
-@CrossOrigin
+@CrossOrigin(origins="*")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value="/api/auth")
@@ -56,12 +56,12 @@ public class OauthController {
         }
     }
 
-    @GetMapping(value = "/{socialLoginType}/token")
-    public ResponseEntity<> getToken(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
-                                     @RequestParam(name = "code") String code,
-                                     @RequestParam(name = "redirect_uri") String redirect_uri) {
-        System.out.println(">> FE에게 받은 authorization code : " + code);
-        System.out.println(">> FE에게 받은 redirect_uri : " + redirect_uri);
+    @PostMapping(value = "/{socialLoginType}/token")
+    public ResponseEntity<String> getToken(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
+                                     @RequestBody String reqbody) {
+	System.out.println(reqbody);	
+        //System.out.println(">> FE에게 받은 authorization code : " + code);
+        //System.out.println(">> FE에게 받은 redirect_uri : " + redirect_uri);
         //String result = oauthService.requestAccessToken_Info(socialLoginType, code);
 
         return new ResponseEntity<>(null, HttpStatus.OK);
