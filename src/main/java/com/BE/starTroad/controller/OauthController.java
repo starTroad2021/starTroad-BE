@@ -58,13 +58,55 @@ public class OauthController {
 
     @PostMapping(value = "/{socialLoginType}/token")
     public ResponseEntity<String> getToken(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
-                                     @RequestBody String reqbody) {
-	System.out.println(reqbody);	
-        //System.out.println(">> FE에게 받은 authorization code : " + code);
-        //System.out.println(">> FE에게 받은 redirect_uri : " + redirect_uri);
-        //String result = oauthService.requestAccessToken_Info(socialLoginType, code);
+                                     @RequestBody JSONObject reqbody) throws ParseException {
+	    System.out.println(reqbody);
+	    String code = reqbody.get("code").toString();
 
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        System.out.println(">> FE에게 받은 authorization code : " + code);
+        //System.out.println(">> FE에게 받은 redirect_uri : " + redirect_uri);
+
+        String result = oauthService.requestAccessToken_Info(socialLoginType, code);
+
+        System.out.println(result);
+        if (result != null){
+
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(result);
+            JSONObject jsonObj = (JSONObject) obj;
+
+            String email = jsonObj.get("user_email").toString();
+            String name = jsonObj.get("user_name").toString();
+            int length = email.length();
+            email = email.substring(1,length-1);
+            length = name.length();
+            name = name.substring(1,length-1);
+            Optional<User> dbUser = jpaUserService.findByEmail(email);
+
+            if (dbUser.isPresent()) {
+                System.out.println("Already registered USER");
+            }
+            else {
+                System.out.println("new USER");
+                User newUser = new User();
+                //이메일이랑 이름 뒤에 "" 떼기
+                newUser.setEmail(email);
+                newUser.setName(name);
+                jpaUserService.save(newUser);
+            }
+
+            final String token = jwtTokenService.createJwtToken(email,name);
+            if(token == null) { //token 생성이 안된 경우
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            else {
+                return new ResponseEntity<String>(token,HttpStatus.OK);
+                //return ResponseEntity.ok(new JwtResponse(token));
+            }
+        }
+        else {
+            //accessToken 얻지 못함
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping(value ="/{socialLoginType}/callback")
