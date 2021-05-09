@@ -39,12 +39,6 @@ public class RoadmapController {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
-        String roadmapGenerator = roadmap.getGenerator();
-
-        if (!(tokenOwner.equals(roadmapGenerator))) {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
-        }
-
         String timestamp = roadmap.getCreated_at();
         Timestamp time;
         try {
@@ -64,7 +58,7 @@ public class RoadmapController {
         newRoadmap.setOwner(tokenOwner);
         newRoadmap.setGenerator(tokenOwner);
         newRoadmap.setInformation(roadmap.getInformation());
-        newRoadmap.setLike_count(roadmap.getLike_count());
+        newRoadmap.setLike_count(0);
         newRoadmap.setImage(roadmap.getImage());
 
         return new ResponseEntity<Roadmap>(jpaRoadmapService.save(newRoadmap), HttpStatus.OK);

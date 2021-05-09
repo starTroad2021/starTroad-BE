@@ -50,7 +50,6 @@ public class HomeController {
             }
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-
     }
 
 }
