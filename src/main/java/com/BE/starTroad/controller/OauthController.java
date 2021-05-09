@@ -60,13 +60,12 @@ public class OauthController {
     public ResponseEntity<String> getToken(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
                                      @RequestBody JSONObject reqbody) throws ParseException {
 				     
-	System.out.println(reqbody);
-	String token = reqbody.get("access_token").toString();
+	    System.out.println(reqbody);
+	    String token = reqbody.get("access_token").toString();
 
         System.out.println(">> FE에게 받은 token : " + token);
 
-        String result = oauthService.requestAccessToken_Info(socialLoginType, code);
-
+        String result = oauthService.getInfo(socialLoginType, token);
 
         System.out.println(result);
         if (result != null){
@@ -95,12 +94,12 @@ public class OauthController {
                 jpaUserService.save(newUser);
             }
 
-            final String token = jwtTokenService.createJwtToken(email,name);
-            if(token == null) { //token 생성이 안된 경우
+            final String jwtToken = jwtTokenService.createJwtToken(email,name);
+            if(jwtToken == null) { //token 생성이 안된 경우
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
             else {
-                return new ResponseEntity<String>(token,HttpStatus.OK);
+                return new ResponseEntity<String>(jwtToken,HttpStatus.OK);
                 //return ResponseEntity.ok(new JwtResponse(token));
             }
         }

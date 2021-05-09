@@ -63,14 +63,14 @@ public class GoogleOauth implements SocialOauth {
         RestTemplate restTemplate = new RestTemplate();
 
         Map<String, Object> params = new HashMap<>();
-        params.put("code",code);
-        params.put("client_id",GOOGLE_SNS_CLIENT_ID);
-        params.put("client_secret",GOOGLE_SNS_CLIENT_SECRET);
-	params.put("redirect_uri",GOOGLE_SNS_CALLBACK_URL);
-        params.put("grant_type","authorization_code");
-	
-	System.out.println("code : "+code);
-	System.out.println(GOOGLE_SNS_CALLBACK_URL);
+        params.put("code", code);
+        params.put("client_id", GOOGLE_SNS_CLIENT_ID);
+        params.put("client_secret", GOOGLE_SNS_CLIENT_SECRET);
+        params.put("redirect_uri", GOOGLE_SNS_CALLBACK_URL);
+        params.put("grant_type", "authorization_code");
+
+        System.out.println("code : " + code);
+        System.out.println(GOOGLE_SNS_CALLBACK_URL);
         ResponseEntity<String> responseEntity =
                 restTemplate.postForEntity(GOOGLE_SNS_TOKEN_BASE_URL, params, String.class);
         //Get access token success
@@ -83,7 +83,7 @@ public class GoogleOauth implements SocialOauth {
 
 
             try {
-                obj = (JSONObject)parser.parse(jsonStr);
+                obj = (JSONObject) parser.parse(jsonStr);
             } catch (ParseException e) {
                 System.out.println("변환에 실패");
                 e.printStackTrace();
@@ -109,11 +109,11 @@ public class GoogleOauth implements SocialOauth {
 
             JSONObject user = new JSONObject();
 
-            user.put("user_id",user_id);
-            user.put("user_name",user_name);
-            user.put("user_email",user_email);
-            user.put("user_AT",user_AT);
-            user.put("user_RT",user_RT);
+            user.put("user_id", user_id);
+            user.put("user_name", user_name);
+            user.put("user_email", user_email);
+            user.put("user_AT", user_AT);
+            user.put("user_RT", user_RT);
 
             String userInfoStr = user.toString();
 
@@ -122,6 +122,24 @@ public class GoogleOauth implements SocialOauth {
         }
         //구글 로그인 처리 요청 실패
         return null;
+    }
+    public String getInfo(String accessToken) {
+        JsonNode userInfo = null;
+        userInfo = getUserInfo(accessToken);
+
+        String user_id = userInfo.get("id").toString();
+        String user_name = userInfo.get("name").toString();
+        String user_email = userInfo.get("email").toString();
+
+        JSONObject user = new JSONObject();
+
+        user.put("user_id", user_id);
+        user.put("user_name", user_name);
+        user.put("user_email", user_email);
+
+        String userInfoStr = user.toString();
+
+        return userInfoStr;
     }
 
     public JsonNode getUserInfo(String accessToken) {

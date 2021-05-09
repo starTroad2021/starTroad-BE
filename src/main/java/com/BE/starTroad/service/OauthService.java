@@ -39,6 +39,11 @@ public class OauthService {
         return socialOauth.getUserInfo(accessToken);
     }
 
+    public String getInfo(SocialLoginType socialLoginType, String accessToken) {
+        SocialOauth socialOauth = this.findSocialOauthByType(socialLoginType);
+        return socialOauth.getInfo(accessToken);
+    }
+
     private SocialOauth findSocialOauthByType(SocialLoginType socialLoginType) {
         return socialOauthList.stream()
                 .filter(x -> x.type() == socialLoginType)
