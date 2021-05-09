@@ -58,7 +58,7 @@ public class OauthController {
     }
 
     @GetMapping(value ="/{socialLoginType}/callback")
-    public ResponseEntity<?> callback(
+    public ResponseEntity<String> callback(
             @PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
             @RequestParam(name ="code") String code) throws ParseException {
         System.out.println(">> 소셜 로그인 서버로부터 받은 code : " + code);
@@ -96,7 +96,8 @@ public class OauthController {
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
             else {
-                return ResponseEntity.ok(new JwtResponse(token));
+                return new ResponseEntity<String>(token,HttpStatus.OK);
+                //return ResponseEntity.ok(new JwtResponse(token));
             }
         }
         else {
