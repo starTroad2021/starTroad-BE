@@ -86,6 +86,19 @@ public class RoadmapController {
         return new ResponseEntity<List<Roadmap>> (roadmaps, HttpStatus.OK);
     }
 
+    @GetMapping(value="/myroadmap")
+    public ResponseEntity<List<Roadmap>> myroadmap(@RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+
+        List<Roadmap> roadmaps = new ArrayList<>();
+
+        roadmaps = jpaRoadmapService.myRoadmaps(tokenOwner);
+
+        return new ResponseEntity<List<Roadmap>>(roadmaps, HttpStatus.OK);
+    }
+
     @GetMapping(value="/{roadmap_id}")
     public ResponseEntity<RoadmapForm> getInfo(@PathVariable("roadmap_id") Long mapId, @RequestHeader("Authorization") String token) {
 
