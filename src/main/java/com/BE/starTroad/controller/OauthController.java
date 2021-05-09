@@ -54,7 +54,17 @@ public class OauthController {
             e.printStackTrace();
             System.out.println(e);
         }
+    }
 
+    @GetMapping(value = "/{socialLoginType}/token")
+    public ResponseEntity<> getToken(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
+                                     @RequestParam(name = "code") String code,
+                                     @RequestParam(name = "redirect_uri") String redirect_uri) {
+        System.out.println(">> FE에게 받은 authorization code : " + code);
+        System.out.println(">> FE에게 받은 redirect_uri : " + redirect_uri);
+        //String result = oauthService.requestAccessToken_Info(socialLoginType, code);
+
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 
     @GetMapping(value ="/{socialLoginType}/callback")
