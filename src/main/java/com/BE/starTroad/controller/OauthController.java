@@ -59,13 +59,14 @@ public class OauthController {
     @PostMapping(value = "/{socialLoginType}/token")
     public ResponseEntity<String> getToken(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
                                      @RequestBody JSONObject reqbody) throws ParseException {
-	    System.out.println(reqbody);
-	    String code = reqbody.get("code").toString();
+				     
+	System.out.println(reqbody);
+	String token = reqbody.get("access_token").toString();
 
-        System.out.println(">> FE에게 받은 authorization code : " + code);
-        //System.out.println(">> FE에게 받은 redirect_uri : " + redirect_uri);
+        System.out.println(">> FE에게 받은 token : " + token);
 
         String result = oauthService.requestAccessToken_Info(socialLoginType, code);
+
 
         System.out.println(result);
         if (result != null){
@@ -109,7 +110,7 @@ public class OauthController {
         }
     }
 
-    @GetMapping(value ="/{socialLoginType}/callback")
+    /*@GetMapping(value ="/{socialLoginType}/callback")
     public ResponseEntity<String> callback(
             @PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
             @RequestParam(name ="code") String code) throws ParseException {
@@ -156,5 +157,5 @@ public class OauthController {
             //accessToken 얻지 못함
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-    }
+    }*/
 }
