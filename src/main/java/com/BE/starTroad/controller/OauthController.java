@@ -60,14 +60,9 @@ public class OauthController {
     public ResponseEntity<String> getToken(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
                                      @RequestBody JSONObject reqbody) throws ParseException {
 				     
-	    System.out.println(reqbody);
-	    String token = reqbody.get("access_token").toString();
-
-        System.out.println(">> FE에게 받은 token : " + token);
+	String token = reqbody.get("access_token").toString();
 
         String result = oauthService.getInfo(socialLoginType, token);
-
-        System.out.println(result);
         if (result != null){
 
             JSONParser parser = new JSONParser();

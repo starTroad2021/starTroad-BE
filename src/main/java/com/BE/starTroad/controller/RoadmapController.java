@@ -42,7 +42,7 @@ public class RoadmapController {
         String roadmapGenerator = roadmap.getGenerator();
 
         if (!(tokenOwner.equals(roadmapGenerator))) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
 
         String timestamp = roadmap.getCreated_at();
@@ -238,6 +238,4 @@ public class RoadmapController {
         }
 
     }
-
-
 }
