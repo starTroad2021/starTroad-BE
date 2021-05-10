@@ -65,17 +65,18 @@ public class RoadmapController {
     }
 
     @GetMapping(value="/search")
-    public ResponseEntity<List<Roadmap>> search(String name, String tag) {
-
-        List<Roadmap> roadmapsName = new ArrayList<>();
-        List<Roadmap> roadmapsTag = new ArrayList<>();
+    public ResponseEntity<List<Roadmap>> search(String name) {
+   
+    /*public ResponseEntity<List<Roadmap>> search(String name, String tag) {*/
+	List<Roadmap> roadmapsName = new ArrayList<>();
+        //List<Roadmap> roadmapsTag = new ArrayList<>();
         List<Roadmap> roadmaps = new ArrayList<>();
 
         roadmapsName = jpaRoadmapService.findByName(name);
-        roadmapsTag = jpaRoadmapService.findByTag(tag);
+        //roadmapsTag = jpaRoadmapService.findByTag(tag);
 
         roadmaps.addAll(roadmapsName);
-        roadmaps.addAll(roadmapsTag);
+        //roadmaps.addAll(roadmapsTag);
 
         return new ResponseEntity<List<Roadmap>> (roadmaps, HttpStatus.OK);
     }
