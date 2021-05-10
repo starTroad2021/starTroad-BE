@@ -1,8 +1,10 @@
 package com.BE.starTroad.controller;
 
 import com.BE.starTroad.config.JwtTokenUtil;
+import com.BE.starTroad.domain.Like;
 import com.BE.starTroad.domain.Roadmap;
 import com.BE.starTroad.domain.User;
+import com.BE.starTroad.service.JpaLikeService;
 import com.BE.starTroad.service.JpaRoadmapService;
 import org.hibernate.engine.query.spi.OrdinalParameterDescriptor;
 import org.json.simple.JSONObject;
@@ -32,6 +34,8 @@ public class RoadmapController {
     JpaRoadmapService jpaRoadmapService;
     @Autowired
     JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    JpaLikeService jpaLikeService;
 
     @PostMapping(value="/generate")
     public ResponseEntity<Roadmap> generate(RoadmapForm roadmap, @RequestHeader("Authorization") String token) {
@@ -102,6 +106,16 @@ public class RoadmapController {
 
         Optional<Roadmap> rdmap = jpaRoadmapService.findById(mapId);
 
+        Optional<Like> likeValid = jpaLikeService.findByEmailAndRoadmap_id(tokenOwner, mapId.intValue());
+        String likeVal;
+
+        if (likeValid.isPresent()) {
+            likeVal = "yes";
+        }
+        else {
+            likeVal = "no";
+        }
+
         RoadmapForm rdform = new RoadmapForm();
         if (rdmap.isPresent()) {
             Roadmap roadmap = rdmap.get();
@@ -123,6 +137,7 @@ public class RoadmapController {
             else {
                 rdform.setValid("no");
             }
+            rdform.setLikeValid(likeVal);
 
             return new ResponseEntity<RoadmapForm>(rdform,HttpStatus.OK);
         }
@@ -206,12 +221,19 @@ public class RoadmapController {
     }
 
     @PostMapping(value="/like")
-    public ResponseEntity<Roadmap> like(Long id) {
+    public ResponseEntity<Roadmap> like(Long id, @RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
         Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
+        Like like = new Like();
+        like.setEmail(tokenOwner);
+        like.setRoadmap_id(id.intValue());
 
         if (roadmap.isPresent()) {
             jpaRoadmapService.upCount(roadmap.get());
+            jpaLikeService.pushLike(like);
             return new ResponseEntity<Roadmap>(roadmap.get(), HttpStatus.OK);
         }
         else {
@@ -220,12 +242,19 @@ public class RoadmapController {
     }
 
     @PostMapping(value="/unlike")
-    public ResponseEntity<Roadmap> unlike(Long id) {
+    public ResponseEntity<Roadmap> unlike(Long id,  @RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
         Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
+        Like like = new Like();
+        like.setEmail(tokenOwner);
+        like.setRoadmap_id(id.intValue());
 
         if (roadmap.isPresent()) {
             jpaRoadmapService.downCount(roadmap.get());
+            jpaLikeService.unpushLike(like);
             return new ResponseEntity<Roadmap>(roadmap.get(), HttpStatus.OK);
         }
         else {

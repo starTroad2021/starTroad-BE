@@ -19,6 +19,8 @@ public class RoadmapForm {
     private int like_count;
     private String image;
     private String valid;
+    private String likeValid;
+
 
     public int getId() {
         return id;
@@ -115,4 +117,13 @@ public class RoadmapForm {
     public void setValid(String valid) {
         this.valid = valid;
     }
+
+    public String getLikeValid() {
+        return likeValid;
+    }
+
+    public void setLikeValid(String likeValid) {
+        this.likeValid = likeValid;
+    }
+
 }
