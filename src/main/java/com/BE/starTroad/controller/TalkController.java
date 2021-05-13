@@ -80,7 +80,9 @@ public class TalkController {
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
         TalkForm talkForm = new TalkForm();
-        List<CommentForm> commentForm = new ArrayList<>();
+        CommentForm commentForm = new CommentForm();
+
+        List<CommentForm> comments = new ArrayList<>();
         
         Optional<Talk> dbTalk = jpaTalkService.findById(talk_id);
 
@@ -94,27 +96,27 @@ public class TalkController {
 
             List<Comment> thisComment = jpaCommentService.findByTalk(talk_id);
 
-	    if (thisComment.size() == 0) {
-		thisComment = null;
-	    }
-	    else {
-                for (int i =0; i < thisComment.size(); i++) {
-		    if (thisComment.get(i).getCommentWriter().equals(tokenOwner)) {
-			commentForm.get(i).setCommentValid("yes");
-		    }
-		    else {
-			commentForm.get(i).setCommentValid("no");
-		    }
-		    commentForm.get(i).setId(thisComment.get(i).getId());
-		    commentForm.get(i).setCreated_at(thisComment.get(i).getCreated_at().toString());
-		    commentForm.get(i).setComment_talk(thisComment.get(i).getCommentTalk());
-		    commentForm.get(i).setComment_writer(thisComment.get(i).getCommentWriter());
-		    commentForm.get(i).setContent(thisComment.get(i).getContent());
-		}
-	    }
+	        if (thisComment.size() == 0) {
+		    thisComment = null;
+	        }
+	        else {
 
-
-            talkForm.setMyComments(commentForm);
+	            for (int i =0; i < thisComment.size(); i++) {
+		            if (thisComment.get(i).getCommentWriter().equals(tokenOwner)) {
+			            commentForm.setCommentValid("yes");
+		            }
+		            else {
+			            commentForm.setCommentValid("no");
+		            }
+		            commentForm.setId(thisComment.get(i).getId());
+		            commentForm.setCreated_at(thisComment.get(i).getCreated_at().toString());
+		            commentForm.setComment_talk(thisComment.get(i).getCommentTalk());
+		            commentForm.setComment_writer(thisComment.get(i).getCommentWriter());
+		            commentForm.setContent(thisComment.get(i).getContent());
+		            comments.add(commentForm);
+		        }
+	        }
+            talkForm.setMyComments(comments);
             return new ResponseEntity<TalkForm>(talkForm, HttpStatus.OK);
         }
         else {
