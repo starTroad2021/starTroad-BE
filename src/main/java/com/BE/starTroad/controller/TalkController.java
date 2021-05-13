@@ -144,9 +144,10 @@ public class TalkController {
         Comment newComment = new Comment();
 
         newComment.setCreated_at(time);
-        newComment.setCommentTalk(comment.getComment_talk());
+        newComment.setCommentTalk(talk_id);
         newComment.setCommentWriter(tokenOwner);
         newComment.setContent(comment.getContent());
+	jpaCommentService.save(newComment);
 
         return new ResponseEntity<Comment>(newComment, HttpStatus.OK);
     }

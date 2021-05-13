@@ -14,6 +14,10 @@ public class JpaCommentService {
     @Autowired
     private SpringDataJpaCommentRepository springDataJpaCommentRepository;
 
+    public Comment save(Comment comment){
+	    springDataJpaCommentRepository.save(comment);
+	    return comment;
+    }
 
     //talk 아이디로 comment 조회
     public List<Comment> findByTalk(Long talkId){
