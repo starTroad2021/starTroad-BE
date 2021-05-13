@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 
 public class CommentForm {
 
-    private int id;
+    private Long id;
 
     private String created_at;
     private int comment_talk;
@@ -15,11 +15,11 @@ public class CommentForm {
     private String content;
     private String commentValid;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

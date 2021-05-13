@@ -8,7 +8,7 @@ public class Talk {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private String name;
     private Timestamp created_at;
@@ -20,11 +20,11 @@ public class Talk {
     private String talkWriter;
     private String description;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

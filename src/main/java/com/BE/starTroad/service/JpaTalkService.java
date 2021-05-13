@@ -32,9 +32,8 @@ public class JpaTalkService {
         return talk;
     }
 
-    public Optional<Talk> findById(int talkId) {
-        Long id = (long) talkId;
-        Optional<Talk> talk = springDataJpaTalkRepository.findById(id);
+    public Optional<Talk> findById(Long talkId) {
+        Optional<Talk> talk = springDataJpaTalkRepository.findById(talkId);
         return talk;
     }
 }

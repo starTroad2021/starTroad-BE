@@ -6,7 +6,7 @@ import java.util.List;
 
 public class TalkForm {
 
-    private int id;
+    private Long id;
 
     private String name;
     private String created_at;
@@ -16,11 +16,11 @@ public class TalkForm {
     private String talkValid;
     private List<CommentForm> myComments;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

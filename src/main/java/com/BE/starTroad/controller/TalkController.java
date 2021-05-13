@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/talk")
+@RequestMapping("/api/roadmap/talk")
 public class TalkController {
 
     @Autowired
@@ -34,16 +34,16 @@ public class TalkController {
 
     //해당 로드맵의 talk 전체 조회
     @GetMapping(value="/{roadmap_id}")
-    public ResponseEntity<List<Talk>> talkList(@PathVariable int mapId) {
+    public ResponseEntity<List<Talk>> talkList(@PathVariable int roadmap_id) {
 
-        List<Talk> talkList = jpaTalkService.findByTalk_Roadmap(mapId);
+        List<Talk> talkList = jpaTalkService.findByTalk_Roadmap(roadmap_id);
 
         return new ResponseEntity<List<Talk>>(talkList, HttpStatus.OK);
     }
 
     //talk 생성
     @PostMapping(value="/{roadmap_id}")
-    public ResponseEntity<Talk> generateTalk(@PathVariable int roadmapId, TalkForm talk, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Talk> generateTalk(@PathVariable int roadmap_id, TalkForm talk, @RequestHeader("Authorization") String token) {
 
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
@@ -62,7 +62,7 @@ public class TalkController {
 
         newTalk.setName(talk.getName());
         newTalk.setCreated_at(time);
-        newTalk.setTalkRoadmap(roadmapId);
+        newTalk.setTalkRoadmap(roadmap_id);
         newTalk.setTalkWriter(tokenOwner);
         newTalk.setDescription(talk.getDescription());
         jpaTalkService.save(newTalk);
@@ -73,7 +73,7 @@ public class TalkController {
 
     //한 talk 조회
     @GetMapping(value="/{roadmap_id}/{talk_id}")
-    public ResponseEntity<TalkForm> detailTalk(@PathVariable int talkId, @PathVariable int mapId,
+    public ResponseEntity<TalkForm> detailTalk(@PathVariable int roadmap_id, @PathVariable long talk_id,
                                                @RequestHeader ("Authorization") String token) {
 
         token = token.substring(7);
@@ -82,7 +82,7 @@ public class TalkController {
         TalkForm talkForm = new TalkForm();
         List<CommentForm> commentForm = new ArrayList<>();
         
-        Optional<Talk> dbTalk = jpaTalkService.findById(talkId);
+        Optional<Talk> dbTalk = jpaTalkService.findById(talk_id);
 
         if (dbTalk.isPresent()) {
             talkForm.setId(dbTalk.get().getId());
@@ -92,21 +92,27 @@ public class TalkController {
             talkForm.setTalk_writer(dbTalk.get().getTalkWriter());
             talkForm.setDescription(dbTalk.get().getDescription());
 
-            List<Comment> thisComment = jpaCommentService.findByTalk(talkId);
+            List<Comment> thisComment = jpaCommentService.findByTalk(talk_id);
 
-            for (int i =0; i < thisComment.size(); i++) {
-                if (thisComment.get(i).getCommentWriter().equals(tokenOwner)) {
-                    commentForm.get(i).setCommentValid("yes");
-                }
-                else {
-                    commentForm.get(i).setCommentValid("no");
-                }
-                commentForm.get(i).setId(thisComment.get(i).getId());
-                commentForm.get(i).setCreated_at(thisComment.get(i).getCreated_at().toString());
-                commentForm.get(i).setComment_talk(thisComment.get(i).getCommentTalk());
-                commentForm.get(i).setComment_writer(thisComment.get(i).getCommentWriter());
-                commentForm.get(i).setContent(thisComment.get(i).getContent());
-            }
+	    if (thisComment.size() == 0) {
+		thisComment = null;
+	    }
+	    else {
+                for (int i =0; i < thisComment.size(); i++) {
+		    if (thisComment.get(i).getCommentWriter().equals(tokenOwner)) {
+			commentForm.get(i).setCommentValid("yes");
+		    }
+		    else {
+			commentForm.get(i).setCommentValid("no");
+		    }
+		    commentForm.get(i).setId(thisComment.get(i).getId());
+		    commentForm.get(i).setCreated_at(thisComment.get(i).getCreated_at().toString());
+		    commentForm.get(i).setComment_talk(thisComment.get(i).getCommentTalk());
+		    commentForm.get(i).setComment_writer(thisComment.get(i).getCommentWriter());
+		    commentForm.get(i).setContent(thisComment.get(i).getContent());
+		}
+	    }
+
 
             talkForm.setMyComments(commentForm);
             return new ResponseEntity<TalkForm>(talkForm, HttpStatus.OK);
@@ -117,7 +123,7 @@ public class TalkController {
     }
 
     @PostMapping(value="/{roadmap_id}/{talk_id}")
-    public ResponseEntity<Comment> writeComment(@PathVariable int talkId, @PathVariable int mapId,
+    public ResponseEntity<Comment> writeComment(@PathVariable int roadmap_id, @PathVariable int talk_id,
                                          CommentForm comment, @RequestHeader ("Authorization") String token) {
 
         token = token.substring(7);
