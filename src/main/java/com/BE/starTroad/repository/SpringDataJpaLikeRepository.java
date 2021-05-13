@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface SpringDataJpaLikeRepository extends JpaRepository<Like, Long> {
 
-    public Optional<Like> findByEmailAndRoadmap_id(String email, int mapId);
+    public Optional<Like> findByEmailAndRoadmapId(String email, int mapId);
 }

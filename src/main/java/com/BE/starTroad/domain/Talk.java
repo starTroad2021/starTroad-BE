@@ -1,9 +1,6 @@
 package com.BE.starTroad.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity(name="talk")
@@ -15,8 +12,12 @@ public class Talk {
 
     private String name;
     private Timestamp created_at;
-    private int talk_roadmap;
-    private String talk_writer;
+
+    @Column(name = "talk_roadmap")
+    private int talkRoadmap;
+
+    @Column(name = "talk_writer")
+    private String talkWriter;
     private String description;
 
     public int getId() {
@@ -43,20 +44,20 @@ public class Talk {
         this.created_at = created_at;
     }
 
-    public int getTalk_roadmap() {
-        return talk_roadmap;
+    public int getTalkRoadmap() {
+        return talkRoadmap;
     }
 
-    public void setTalk_roadmap(int talk_roadmap) {
-        this.talk_roadmap = talk_roadmap;
+    public void setTalkRoadmap(int talkRoadmap) {
+        this.talkRoadmap = talkRoadmap;
     }
 
-    public String getTalk_writer() {
-        return talk_writer;
+    public String getTalkWriter() {
+        return talkWriter;
     }
 
-    public void setTalk_writer(String talk_writer) {
-        this.talk_writer = talk_writer;
+    public void setTalkWriter(String talkWriter) {
+        this.talkWriter = talkWriter;
     }
 
     public String getDescription() {

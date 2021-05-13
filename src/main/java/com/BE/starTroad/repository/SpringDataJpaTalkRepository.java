@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface SpringDataJpaTalkRepository extends JpaRepository<Talk, Long> {
 
-    public List<Talk> findByTalk_Roadmap(int mapId);
+    public List<Talk> findByTalkRoadmap(int mapId);
 }

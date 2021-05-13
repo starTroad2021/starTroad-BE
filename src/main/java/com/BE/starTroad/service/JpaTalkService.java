@@ -23,7 +23,7 @@ public class JpaTalkService {
 
     public List<Talk> findByTalk_Roadmap(int mapId) {
         List<Talk> talks = new ArrayList<>();
-        springDataJpaTalkRepository.findByTalk_Roadmap(mapId).forEach(e -> talks.add(e));
+        springDataJpaTalkRepository.findByTalkRoadmap(mapId).forEach(e -> talks.add(e));
         return talks;
     }
 

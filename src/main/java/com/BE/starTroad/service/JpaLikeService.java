@@ -22,7 +22,7 @@ public class JpaLikeService {
     }
 
     public Optional<Like> findByEmailAndRoadmap_id(String email, int mapId) {
-        Optional<Like> like = springDataJpaLikeRepository.findByEmailAndRoadmap_id(email, mapId);
+        Optional<Like> like = springDataJpaLikeRepository.findByEmailAndRoadmapId(email, mapId);
 
         return like;
     }

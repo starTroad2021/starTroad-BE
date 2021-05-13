@@ -1,9 +1,6 @@
 package com.BE.starTroad.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity(name="like")
 public class Like {
@@ -14,7 +11,9 @@ public class Like {
     private int id;
 
     private String email;
-    private int roadmap_id;
+
+    @Column(name = "roadmap_id")
+    private int roadmapId;
 
     public int getId() {
         return id;
@@ -32,11 +31,13 @@ public class Like {
         this.email = email;
     }
 
-    public int getRoadmap_id() {
-        return roadmap_id;
+
+    public int getRoadmapId() {
+        return roadmapId;
     }
 
-    public void setRoadmap_id(int roadmap_id) {
-        this.roadmap_id = roadmap_id;
+    public void setRoadmapId(int roadmapId) {
+        this.roadmapId = roadmapId;
     }
+
 }

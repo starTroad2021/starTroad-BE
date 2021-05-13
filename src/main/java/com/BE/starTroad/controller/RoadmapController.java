@@ -229,7 +229,7 @@ public class RoadmapController {
         Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
         Like like = new Like();
         like.setEmail(tokenOwner);
-        like.setRoadmap_id(id.intValue());
+        like.setRoadmapId(id.intValue());
 
         if (roadmap.isPresent()) {
             jpaRoadmapService.upCount(roadmap.get());
@@ -250,7 +250,7 @@ public class RoadmapController {
         Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
         Like like = new Like();
         like.setEmail(tokenOwner);
-        like.setRoadmap_id(id.intValue());
+        like.setRoadmapId(id.intValue());
 
         if (roadmap.isPresent()) {
             jpaRoadmapService.downCount(roadmap.get());

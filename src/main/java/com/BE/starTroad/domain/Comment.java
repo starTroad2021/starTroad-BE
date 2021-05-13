@@ -1,9 +1,6 @@
 package com.BE.starTroad.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity(name="comment")
@@ -14,8 +11,12 @@ public class Comment {
     private int id;
 
     private Timestamp created_at;
-    private int comment_talk;
-    private String comment_writer;
+
+    @Column(name = "comment_talk")
+    private int commentTalk;
+
+    @Column(name = "comment_writer")
+    private String commentWriter;
     private String content;
 
     public int getId() {
@@ -34,20 +35,20 @@ public class Comment {
         this.created_at = created_at;
     }
 
-    public int getComment_talk() {
-        return comment_talk;
+    public int getCommentTalk() {
+        return commentTalk;
     }
 
-    public void setComment_talk(int comment_talk) {
-        this.comment_talk = comment_talk;
+    public void setCommentTalk(int commentTalk) {
+        this.commentTalk = commentTalk;
     }
 
-    public String getComment_writer() {
-        return comment_writer;
+    public String getCommentWriter() {
+        return commentWriter;
     }
 
-    public void setComment_writer(String comment_writer) {
-        this.comment_writer = comment_writer;
+    public void setCommentWriter(String commentWriter) {
+        this.commentWriter = commentWriter;
     }
 
     public String getContent() {

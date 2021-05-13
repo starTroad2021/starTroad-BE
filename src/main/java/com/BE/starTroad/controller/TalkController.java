@@ -62,8 +62,8 @@ public class TalkController {
 
         newTalk.setName(talk.getName());
         newTalk.setCreated_at(time);
-        newTalk.setTalk_roadmap(roadmapId);
-        newTalk.setTalk_writer(tokenOwner);
+        newTalk.setTalkRoadmap(roadmapId);
+        newTalk.setTalkWriter(tokenOwner);
         newTalk.setDescription(talk.getDescription());
         jpaTalkService.save(newTalk);
 
@@ -88,14 +88,14 @@ public class TalkController {
             talkForm.setId(dbTalk.get().getId());
             talkForm.setName(dbTalk.get().getName());
             talkForm.setCreated_at(dbTalk.get().getCreated_at().toString());
-            talkForm.setTalk_roadmap(dbTalk.get().getTalk_roadmap());
-            talkForm.setTalk_writer(dbTalk.get().getTalk_writer());
+            talkForm.setTalk_roadmap(dbTalk.get().getTalkRoadmap());
+            talkForm.setTalk_writer(dbTalk.get().getTalkWriter());
             talkForm.setDescription(dbTalk.get().getDescription());
 
             List<Comment> thisComment = jpaCommentService.findByTalk(talkId);
 
             for (int i =0; i < thisComment.size(); i++) {
-                if (thisComment.get(i).getComment_writer().equals(tokenOwner)) {
+                if (thisComment.get(i).getCommentWriter().equals(tokenOwner)) {
                     commentForm.get(i).setCommentValid("yes");
                 }
                 else {
@@ -103,8 +103,8 @@ public class TalkController {
                 }
                 commentForm.get(i).setId(thisComment.get(i).getId());
                 commentForm.get(i).setCreated_at(thisComment.get(i).getCreated_at().toString());
-                commentForm.get(i).setComment_talk(thisComment.get(i).getComment_talk());
-                commentForm.get(i).setComment_writer(thisComment.get(i).getComment_writer());
+                commentForm.get(i).setComment_talk(thisComment.get(i).getCommentTalk());
+                commentForm.get(i).setComment_writer(thisComment.get(i).getCommentWriter());
                 commentForm.get(i).setContent(thisComment.get(i).getContent());
             }
 
@@ -136,8 +136,8 @@ public class TalkController {
         Comment newComment = new Comment();
 
         newComment.setCreated_at(time);
-        newComment.setComment_talk(comment.getComment_talk());
-        newComment.setComment_writer(tokenOwner);
+        newComment.setCommentTalk(comment.getComment_talk());
+        newComment.setCommentWriter(tokenOwner);
         newComment.setContent(comment.getContent());
 
         return new ResponseEntity<Comment>(newComment, HttpStatus.OK);
