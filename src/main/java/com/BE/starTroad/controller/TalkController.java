@@ -34,16 +34,16 @@ public class TalkController {
 
     //해당 로드맵의 talk 전체 조회
     @GetMapping(value="/{roadmap_id}")
-    public ResponseEntity<List<Talk>> talkList(@PathVariable("roadmap_id") int mapId) {
+    public ResponseEntity<List<Talk>> talkList(@PathVariable int mapId) {
 
         List<Talk> talkList = jpaTalkService.findByTalk_Roadmap(mapId);
 
         return new ResponseEntity<List<Talk>>(talkList, HttpStatus.OK);
     }
 
-    //로드맵 생성
+    //talk 생성
     @PostMapping(value="/{roadmap_id}")
-    public ResponseEntity<Talk> generateTalke(@PathVariable int roadmapId, TalkForm talk, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Talk> generateTalk(@PathVariable int roadmapId, TalkForm talk, @RequestHeader("Authorization") String token) {
 
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
