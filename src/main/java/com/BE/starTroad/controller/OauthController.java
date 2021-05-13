@@ -1,26 +1,16 @@
 package com.BE.starTroad.controller;
 
-import com.BE.starTroad.config.JwtTokenUtil;
-import com.BE.starTroad.domain.JwtRequest;
-import com.BE.starTroad.domain.JwtResponse;
 import com.BE.starTroad.domain.User;
 import com.BE.starTroad.helper.constants.SocialLoginType;
-import com.BE.starTroad.repository.JpaUserRepository;
 import com.BE.starTroad.service.*;
-import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.protocol.HTTP;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;

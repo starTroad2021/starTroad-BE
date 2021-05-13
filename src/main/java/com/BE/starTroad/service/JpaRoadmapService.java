@@ -1,6 +1,7 @@
 package com.BE.starTroad.service;
 
 import com.BE.starTroad.domain.Roadmap;
+import com.BE.starTroad.repository.SpringDataJpaLikeRepository;
 import com.BE.starTroad.repository.SpringDataJpaRoadmapRepository;
 import com.BE.starTroad.repository.SpringDataJpaUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

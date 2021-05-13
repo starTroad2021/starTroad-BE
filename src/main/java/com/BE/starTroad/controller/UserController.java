@@ -1,23 +1,13 @@
 package com.BE.starTroad.controller;
 
 import com.BE.starTroad.config.JwtTokenUtil;
-import com.BE.starTroad.domain.Roadmap;
 import com.BE.starTroad.domain.User;
-import com.BE.starTroad.repository.JpaUserRepository;
 import com.BE.starTroad.service.JpaUserService;
-import com.BE.starTroad.service.UserService;
-import org.apache.naming.factory.SendMailFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityManager;
-import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
-import java.util.Map;
 import java.util.Optional;
 
 
