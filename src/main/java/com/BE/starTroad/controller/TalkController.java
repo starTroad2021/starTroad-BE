@@ -94,6 +94,13 @@ public class TalkController {
             talkForm.setTalk_writer(dbTalk.get().getTalkWriter());
             talkForm.setDescription(dbTalk.get().getDescription());
 
+            if (dbTalk.get().getTalkWriter().equals(tokenOwner)) {
+                talkForm.setTalkValid("yes");
+            }
+            else {
+                talkForm.setTalkValid("no");
+            }
+
             List<Comment> thisComment = jpaCommentService.findByTalk(talk_id);
 
 	        if (thisComment.size() == 0) {
