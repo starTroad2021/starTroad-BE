@@ -17,6 +17,7 @@ public class Comment {
 
     @Column(name = "comment_writer")
     private String commentWriter;
+
     private String content;
 
     public Long getId() {

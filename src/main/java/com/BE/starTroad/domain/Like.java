@@ -2,7 +2,7 @@ package com.BE.starTroad.domain;
 
 import javax.persistence.*;
 
-@Entity(name="like")
+@Entity(name="likelist")
 public class Like {
 
 
