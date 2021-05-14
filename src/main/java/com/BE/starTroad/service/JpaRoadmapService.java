@@ -42,7 +42,7 @@ public class JpaRoadmapService {
             dbRoadmap.get().setOwner(roadmap.getOwner());
             dbRoadmap.get().setGenerator(roadmap.getGenerator());
             dbRoadmap.get().setInformation(roadmap.getInformation());
-            dbRoadmap.get().setLike_count(roadmap.getLike_count());
+            dbRoadmap.get().setLikeCount(roadmap.getLikeCount());
             springDataJpaRoadmapRepository.save(dbRoadmap.get());
             return roadmap;
         }
@@ -109,17 +109,17 @@ public class JpaRoadmapService {
     //좋아요 수 올리기
     public int upCount(Roadmap roadmap) {
 
-        roadmap.setLike_count(roadmap.getLike_count()+1);
+        roadmap.setLikeCount(roadmap.getLikeCount()+1);
         springDataJpaRoadmapRepository.save(roadmap);
-        return roadmap.getLike_count();
+        return roadmap.getLikeCount();
     }
 
     //좋아요 수 내리기
     public int downCount(Roadmap roadmap) {
 
-        roadmap.setLike_count(roadmap.getLike_count()-1);
+        roadmap.setLikeCount(roadmap.getLikeCount()-1);
         springDataJpaRoadmapRepository.save(roadmap);
-        return roadmap.getLike_count();
+        return roadmap.getLikeCount();
     }
 
     //나의 로드맵 조회

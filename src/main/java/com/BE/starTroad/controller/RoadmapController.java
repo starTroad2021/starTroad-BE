@@ -62,7 +62,7 @@ public class RoadmapController {
         newRoadmap.setOwner(tokenOwner);
         newRoadmap.setGenerator(tokenOwner);
         newRoadmap.setInformation(roadmap.getInformation());
-        newRoadmap.setLike_count(0);
+        newRoadmap.setLikeCount(0);
         newRoadmap.setImage(roadmap.getImage());
 
         return new ResponseEntity<Roadmap>(jpaRoadmapService.save(newRoadmap), HttpStatus.OK);
@@ -128,7 +128,7 @@ public class RoadmapController {
             rdform.setOwner(rdmap.get().getOwner());
             rdform.setGenerator(rdmap.get().getGenerator());
             rdform.setInformation(rdmap.get().getInformation());
-            rdform.setLike_count(rdmap.get().getLike_count());
+            rdform.setLike_count(rdmap.get().getLikeCount());
             rdform.setImage(rdmap.get().getImage());
 
             if (rdmap.get().getOwner().equals(tokenOwner)) {
@@ -181,7 +181,7 @@ public class RoadmapController {
         newRoadmap.setOwner(roadmapOwner);
         newRoadmap.setGenerator(rdMap.get().getGenerator());
         newRoadmap.setInformation(roadmap.getInformation());
-        newRoadmap.setLike_count(roadmap.getLike_count());
+        newRoadmap.setLikeCount(roadmap.getLike_count());
         newRoadmap.setImage(roadmap.getImage());
 
         Roadmap rdmap = jpaRoadmapService.update(mapId, newRoadmap);
