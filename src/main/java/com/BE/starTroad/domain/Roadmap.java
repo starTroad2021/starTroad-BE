@@ -3,10 +3,7 @@ package com.BE.starTroad.domain;
 
 import org.json.simple.JSONObject;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Time;
 import java.sql.Timestamp;
 
@@ -25,7 +22,9 @@ public class Roadmap {
     private String owner;
     private String generator;
     private String information;
-    private int like_count;
+
+    @Column(name = "like_count")
+    private int likeCount;
     private String image;
 
     public Long getId() {
@@ -59,7 +58,6 @@ public class Roadmap {
     public void setTag(String tag) {
         this.tag = tag;
     }
-
 
     public String getSummary() {
         return summary;
@@ -101,12 +99,12 @@ public class Roadmap {
         this.information = information;
     }
 
-    public int getLike_count() {
-        return like_count;
+    public int getLikeCount() {
+        return likeCount;
     }
 
-    public void setLike_count(int like_count) {
-        this.like_count = like_count;
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
     }
 
     public String getImage() {
