@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface SpringDataJpaCommentRepository extends JpaRepository<Comment, Long> {
 
-    public List<Comment> findByIdList(Long talkId);
+    public List<Comment> findAllByCommentTalk(int talkId);
 }
