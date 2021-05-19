@@ -254,8 +254,7 @@ public class RoadmapController {
         like.setRoadmapId(id.intValue());
         */
         Optional<Like> dbLike = jpaLikeService.findByEmailAndRoadmap_id(tokenOwner, id.intValue());
-        int dbLikeId = dbLike.get().getId();
-        Long likeId = (long) dbLikeId;
+        Long likeId = dbLike.get().getId();
 
         if (roadmap.isPresent()) {
             jpaRoadmapService.downCount(roadmap.get());
