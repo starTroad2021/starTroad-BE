@@ -17,8 +17,9 @@ public class JpaLikeService {
         springDataJpaLikeRepository.save(like);
     }
 
-    public void unpushLike(Like like) {
-        springDataJpaLikeRepository.delete(like);
+    public void unpushLike(Long id) {
+
+        springDataJpaLikeRepository.deleteById(id);
     }
 
     public Optional<Like> findByEmailAndRoadmap_id(String email, int mapId) {

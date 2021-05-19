@@ -248,13 +248,18 @@ public class RoadmapController {
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
         Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
-        Like like = new Like();
+
+        /*Like like = new Like();
         like.setEmail(tokenOwner);
         like.setRoadmapId(id.intValue());
+        */
+        Optional<Like> dbLike = jpaLikeService.findByEmailAndRoadmap_id(tokenOwner, id.intValue());
+        int dbLikeId = dbLike.get().getId();
+        Long likeId = (long) dbLikeId;
 
         if (roadmap.isPresent()) {
             jpaRoadmapService.downCount(roadmap.get());
-            jpaLikeService.unpushLike(like);
+            jpaLikeService.unpushLike(likeId);
             return new ResponseEntity<Roadmap>(roadmap.get(), HttpStatus.OK);
         }
         else {
