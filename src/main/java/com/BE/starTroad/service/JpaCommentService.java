@@ -21,9 +21,10 @@ public class JpaCommentService {
 
     //talk 아이디로 comment 조회
     public List<Comment> findByTalk(Long talkId){
+        int id = talkId.intValue();
         List<Comment> comments = new ArrayList<>();
-        springDataJpaCommentRepository.findByIdList(talkId).forEach(e -> comments.add(e));
-        //comments.add(springDataJpaCommentRepository.findById(talkId).get());
+        springDataJpaCommentRepository.findAllByCommentTalk(id).forEach(e -> comments.add(e));
         return comments;
     }
+
 }
