@@ -9,8 +9,8 @@ import java.util.List;
 @Repository
 public interface SpringDataJpaStudyRepository extends JpaRepository<Study, Long> {
 
-    public List<Study> findByName(String name);
-    public List<Study> findByFollowMap(int mapId);
-    public List<Study> findByLeader(String email);
+    List<Study> findByName(String name);
+    List<Study> findByFollowMap(int mapId);
+    List<Study> findByLeader(String email);
 
 }

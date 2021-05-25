@@ -10,7 +10,6 @@ import java.util.Optional;
 @Repository
 public interface SpringDataJpaStudierRepository extends JpaRepository<Studier, Long> {
 
-    public List<Studier> findByStudyId(int study_id);
-    public int countByStudyId(int study_id);
+    List<Studier> findByStudyId(int study_id);
     Optional<Studier> findByStudyIdAndEmail(int studyId, String email);
 }
