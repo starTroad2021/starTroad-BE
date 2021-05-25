@@ -62,6 +62,7 @@ public class StudyController {
         }
 
         Study newStudy = new Study();
+        Study studyId = new Study();
 
         newStudy.setName(study.getName());
         newStudy.setFollowMap(study.getFollow_map());
@@ -70,7 +71,13 @@ public class StudyController {
         newStudy.setDescription(study.getDescription());
         newStudy.setMaxNum(study.getMax_num());
         newStudy.setStatus(study.getStatus());
-        jpaStudyService.save(newStudy);
+        studyId = jpaStudyService.save(newStudy);
+
+        Studier studier = new Studier();
+        studier.setStudyId(studyId.getId());
+        studier.setEmail(tokenOwner);
+        jpaStudierService.save(studier);
+
 
         return new ResponseEntity<Study>(newStudy, HttpStatus.OK);
     }
@@ -92,11 +99,6 @@ public class StudyController {
             studyForm.setDescription(dbStudy.get().getDescription());
             studyForm.setMax_num(dbStudy.get().getMaxNum());
             studyForm.setStatus(dbStudy.get().getStatus());
-
-            Studier studier = new Studier();
-            studier.setStudyId(study_id);
-            studier.setEmail(tokenOwner);
-            jpaStudierService.save(studier);
 
             //현재 참여 인원
             int num = jpaStudierService.studyNum(study_id);
