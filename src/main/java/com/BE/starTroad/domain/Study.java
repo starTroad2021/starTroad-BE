@@ -3,10 +3,7 @@ package com.BE.starTroad.domain;
 import org.hibernate.resource.jdbc.spi.JdbcSessionOwner;
 import org.json.simple.JSONObject;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity(name="study")
@@ -17,11 +14,20 @@ public class Study {
     private int id;
 
     private String name;
-    private int follow_map;
-    private Timestamp created_at;
+
+    @Column(name = "follow_map")
+    private int followMap;
+
+    private String leader;
+
+    @Column(name = "created_at")
+    private Timestamp createdAt;
+
     private String description;
-    private int max_num;
-    private JSONObject member;
+
+    @Column(name = "max_num")
+    private int maxNum;
+
     private int status;
 
     public int getId() {
@@ -40,20 +46,28 @@ public class Study {
         this.name = name;
     }
 
-    public int getFollow_map() {
-        return follow_map;
+    public int getFollowMap() {
+        return followMap;
     }
 
-    public void setFollow_map(int follow_map) {
-        this.follow_map = follow_map;
+    public void setFollowMap(int followMap) {
+        this.followMap = followMap;
     }
 
-    public Timestamp getCreated_at() {
-        return created_at;
+    public String getLeader() {
+        return leader;
     }
 
-    public void setCreated_at(Timestamp created_at) {
-        this.created_at = created_at;
+    public void setLeader(String leader) {
+        this.leader = leader;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getDescription() {
@@ -64,20 +78,12 @@ public class Study {
         this.description = description;
     }
 
-    public int getMax_num() {
-        return max_num;
+    public int getMaxNum() {
+        return maxNum;
     }
 
-    public void setMax_num(int max_num) {
-        this.max_num = max_num;
-    }
-
-    public JSONObject getMember() {
-        return member;
-    }
-
-    public void setMember(JSONObject member) {
-        this.member = member;
+    public void setMaxNum(int maxNum) {
+        this.maxNum = maxNum;
     }
 
     public int getStatus() {
@@ -87,6 +93,4 @@ public class Study {
     public void setStatus(int status) {
         this.status = status;
     }
-
-
 }
