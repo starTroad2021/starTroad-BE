@@ -43,7 +43,7 @@ public class JpaRequestService {
         return requests;
     }
 
-    public Request accept(Long id) {
+    public Request accept(int id) {
         Optional<Request> acceptRequest = springDataJpaRequestRepository.findById(id);
 
         if (acceptRequest.isPresent()) {
