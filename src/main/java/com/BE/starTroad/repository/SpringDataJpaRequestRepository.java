@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface SpringDataJpaRequestRepository extends JpaRepository<Request, Long> {
 
-    public Optional<Request> findByStudyIdAndRequester(Long studyId, String email);
+    public Optional<Request> findByStudyIdAndRequester(int studyId, String email);
     public List<Request> findByRequester(String email);
     public List<Request> findByHead(String email);
 }
