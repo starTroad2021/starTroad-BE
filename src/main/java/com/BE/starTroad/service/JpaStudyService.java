@@ -23,7 +23,7 @@ public class JpaStudyService {
         return studies;
     }
     //개별 스터디 조회
-    public Optional<Study> findById(Long id) {
+    public Optional<Study> findById(int id) {
         Optional <Study> study = springDataJpaStudyRepository.findById(id);
         return study;
     }
@@ -41,7 +41,7 @@ public class JpaStudyService {
     }
 
     public Study update(int id, Study study) {
-        Optional<Study> dbStudy = springDataJpaStudyRepository.findById((long)id);
+        Optional<Study> dbStudy = springDataJpaStudyRepository.findById(id);
 
         if (dbStudy.isPresent()) {
             dbStudy.get().setName(study.getName());

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SpringDataJpaRequestRepository extends JpaRepository<Request, Long> {
+public interface SpringDataJpaRequestRepository extends JpaRepository<Request, Integer> {
 
     Optional<Request> findByStudyIdAndRequester(int studyId, String email);
     List<Request> findByRequester(String email);

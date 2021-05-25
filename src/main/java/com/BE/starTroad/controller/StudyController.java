@@ -82,8 +82,7 @@ public class StudyController {
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
         StudyForm studyForm = new StudyForm();
-        Long studyId = (long) study_id;
-        Optional<Study> dbStudy = jpaStudyService.findById(studyId);
+        Optional<Study> dbStudy = jpaStudyService.findById(study_id);
         if (dbStudy.isPresent()) {
             studyForm.setId(dbStudy.get().getId());
             studyForm.setName(dbStudy.get().getName());
@@ -158,7 +157,7 @@ public class StudyController {
 
         String studyHead;
         Request newRequest = new Request();
-        Optional<Study> dbStudy = jpaStudyService.findById((long)study_id);
+        Optional<Study> dbStudy = jpaStudyService.findById(study_id);
         if (dbStudy.isPresent()) {
             studyHead = dbStudy.get().getLeader();
             newRequest.setHead(studyHead);
@@ -185,7 +184,7 @@ public class StudyController {
 
         if (request.isPresent()) {
             int requestId = request.get().getId();
-            jpaRequestService.accept((long)requestId);
+            jpaRequestService.accept(requestId);
         }
         else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -206,7 +205,7 @@ public class StudyController {
 
         if (request.isPresent()) {
             int requestId = request.get().getId();
-            jpaRequestService.accept((long)requestId);
+            jpaRequestService.accept(requestId);
         }
         else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -221,7 +220,7 @@ public class StudyController {
 
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
-        Optional<Study> dbStudy = jpaStudyService.findById((long)study_id);
+        Optional<Study> dbStudy = jpaStudyService.findById(study_id);
         String studyOwner = "";
 
         if (dbStudy.isPresent()) {

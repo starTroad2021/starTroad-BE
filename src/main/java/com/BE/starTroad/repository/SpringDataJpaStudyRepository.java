@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface SpringDataJpaStudyRepository extends JpaRepository<Study, Long> {
+public interface SpringDataJpaStudyRepository extends JpaRepository<Study, Integer> {
 
     List<Study> findByName(String name);
     List<Study> findByFollowMap(int mapId);
