@@ -147,7 +147,7 @@ public class StudyController {
         return new ResponseEntity<List<Study>>(myStudies, HttpStatus.OK);
     }
     //스터디 참여 요청 리스트
-    @GetMapping(value = "/studylist")
+    @GetMapping(value = "/requestlist")
     public ResponseEntity<List<Request>> requestList(@RequestHeader ("Authorization") String token) {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
@@ -248,7 +248,7 @@ public class StudyController {
         }
 
         Study newStudy = new Study();
-
+	newStudy.setId(study_id);
         newStudy.setName(study.getName());
         newStudy.setFollowMap(study.getFollow_map());
         newStudy.setLeader(tokenOwner);
