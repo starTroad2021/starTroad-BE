@@ -93,6 +93,11 @@ public class StudyController {
             studyForm.setMax_num(dbStudy.get().getMaxNum());
             studyForm.setStatus(dbStudy.get().getStatus());
 
+            Studier studier = new Studier();
+            studier.setStudyId(study_id);
+            studier.setEmail(tokenOwner);
+            jpaStudierService.save(studier);
+
             //현재 참여 인원
             int num = jpaStudierService.studyNum(study_id);
             studyForm.setNow_num(num);

@@ -30,4 +30,9 @@ public class JpaStudierService {
         return studier;
     }
 
+    public Studier save(Studier studier) {
+        springDataJpaStudierRepository.save(studier);
+        return studier;
+    }
+
 }
