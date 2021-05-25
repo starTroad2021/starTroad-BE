@@ -16,7 +16,7 @@ public class JpaRequestService {
     @Autowired
     private SpringDataJpaRequestRepository springDataJpaRequestRepository;
 
-    public Optional<Request> findByStudyIdAndRequester(Long studyId, String email) {
+    public Optional<Request> findByStudyIdAndRequester(int studyId, String email) {
 
         Optional<Request> request = springDataJpaRequestRepository.findByStudyIdAndRequester(studyId, email);
 

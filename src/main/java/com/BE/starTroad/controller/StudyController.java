@@ -76,7 +76,7 @@ public class StudyController {
     }
     //스터디 세부사항 조회
     @GetMapping(value="/{roadmap_id}/{study_id}")
-    public ResponseEntity<StudyForm> detailStudy(@PathVariable int roadmap_id, @PathVariable Long study_id,
+    public ResponseEntity<StudyForm> detailStudy(@PathVariable int roadmap_id, @PathVariable int study_id,
                                                  @RequestHeader ("Authorization") String token) {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
@@ -85,7 +85,7 @@ public class StudyController {
 
         Optional<Study> dbStudy = jpaStudyService.findById(study_id);
         if (dbStudy.isPresent()) {
-            studyForm.setId(dbStudy.get().getId().intValue());
+            studyForm.setId(dbStudy.get().getId());
             studyForm.setName(dbStudy.get().getName());
             studyForm.setFollow_map(dbStudy.get().getFollowMap());
             studyForm.setLeader(dbStudy.get().getLeader());
@@ -152,7 +152,7 @@ public class StudyController {
     }
     //스터디 참여요청
     @PostMapping(value = "/{roadmap_id}/{study_id}/ask")
-    public ResponseEntity<Request> studyRequest(@PathVariable Long roadmap_id, @PathVariable Long study_id, @RequestHeader ("Authorization") String token) {
+    public ResponseEntity<Request> studyRequest(@PathVariable Long roadmap_id, @PathVariable int study_id, @RequestHeader ("Authorization") String token) {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
@@ -163,7 +163,7 @@ public class StudyController {
             studyHead = dbStudy.get().getLeader();
             newRequest.setHead(studyHead);
             newRequest.setRequester(tokenOwner);
-            newRequest.setStudyId(study_id.intValue());
+            newRequest.setStudyId(study_id);
             jpaRequestService.save(newRequest);
         }
         else {
@@ -175,7 +175,7 @@ public class StudyController {
 
     //스터디 참여요청 수락
     @PostMapping(value = "/{roadmap_id}/{study_id}/accept")
-    public ResponseEntity<Request> acceptRequest(@PathVariable Long roadmap_id, @PathVariable Long study_id,
+    public ResponseEntity<Request> acceptRequest(@PathVariable Long roadmap_id, @PathVariable int study_id,
                                                  @RequestHeader ("Authorization") String token,
                                                  String requester) {
         token = token.substring(7);
@@ -196,7 +196,7 @@ public class StudyController {
 
     //스터디 참여요청 거절
     @PostMapping(value = "/{roadmap_id}/{study_id}/deny")
-    public ResponseEntity<Request> denyRequest(@PathVariable Long roadmap_id, @PathVariable Long study_id,
+    public ResponseEntity<Request> denyRequest(@PathVariable Long roadmap_id, @PathVariable int study_id,
                                                  @RequestHeader ("Authorization") String token,
                                                  String requester) {
         token = token.substring(7);
@@ -216,7 +216,7 @@ public class StudyController {
     }
     //스터디 내용 수정
     @PutMapping(value="/modify/{roadmap_id}/{study_id}")
-    public ResponseEntity<Study> modifyStudy(@PathVariable int roadmap_id, @PathVariable Long study_id,
+    public ResponseEntity<Study> modifyStudy(@PathVariable int roadmap_id, @PathVariable int study_id,
                                              StudyForm study, @RequestHeader("Authorization") String token) {
 
         token = token.substring(7);
