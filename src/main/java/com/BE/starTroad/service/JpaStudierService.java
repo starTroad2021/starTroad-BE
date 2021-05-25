@@ -20,7 +20,8 @@ public class JpaStudierService {
     //스터디 아이디로 몇 명이 스터디에 참여하는지 조회
     public int studyNum(Long studyId) {
         List<Studier> studiers = new ArrayList<>();
-        int num = springDataJpaStudierRepository.countByStudyId(studyId);
+        springDataJpaStudierRepository.findByStudyId(studyId.intValue()).forEach(e -> studiers.add(e));
+        int num = studiers.size();
         return num;
     }
 
