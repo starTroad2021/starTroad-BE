@@ -85,7 +85,7 @@ public class StudyController {
 
         Optional<Study> dbStudy = jpaStudyService.findById(study_id);
         if (dbStudy.isPresent()) {
-            studyForm.setId(dbStudy.get().getId());
+            studyForm.setId(dbStudy.get().getId().intValue());
             studyForm.setName(dbStudy.get().getName());
             studyForm.setFollow_map(dbStudy.get().getFollowMap());
             studyForm.setLeader(dbStudy.get().getLeader());
