@@ -180,7 +180,7 @@ public class StudyController {
             studyId = myStudiers.get(i).getStudyId();
             study = jpaStudyService.findById(studyId).get();
             if (study != null) {
-                studyForm.setId(study.getId());
+                studyForm.setId(studyId);
                 studyForm.setFollow_map(study.getFollowMap());
                 studyForm.setLeader(study.getLeader());
                 studyForm.setCreated_at(study.getCreatedAt().toString());
@@ -201,10 +201,6 @@ public class StudyController {
                 studyForm.setNow_num(num);
                 myStudies.add(studyForm);
             }
-            else {
-                System.out.println("hihihihi");
-            }
-
         }
         return new ResponseEntity<List<StudyForm>>(myStudies, HttpStatus.OK);
     }
