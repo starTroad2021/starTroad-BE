@@ -292,6 +292,24 @@ public class StudyController {
 
         return new ResponseEntity<Request>(request.get(), HttpStatus.OK);
     }
+
+    //스터디 탈퇴
+    @PostMapping(value = "/{roadmap_id}/{study_id}/quit")
+    public ResponseEntity<Studier> quitStudy(@PathVariable Long roadmap_id, @PathVariable int study_id,
+                                      @RequestHeader ("Authorization") String token) {
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+
+        Studier studier = jpaStudierService.quit(study_id, tokenOwner);
+
+        if (studier != null) {
+            return new ResponseEntity<Studier>(studier, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
     //스터디 내용 수정
     @PutMapping(value="/modify/{roadmap_id}/{study_id}")
     public ResponseEntity<Study> modifyStudy(@PathVariable int roadmap_id, @PathVariable int study_id,

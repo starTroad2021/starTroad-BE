@@ -42,5 +42,16 @@ public class JpaStudierService {
         return joinStudy;
     }
 
+    public Studier quit(int studyId, String email) {
+
+        Optional<Studier> quitRequester = springDataJpaStudierRepository.findByStudyIdAndEmail(studyId, email);
+
+        if (quitRequester.isPresent()) {
+            springDataJpaStudierRepository.delete(quitRequester.get());
+        }
+        return quitRequester.get();
+    }
+
+
 
 }
