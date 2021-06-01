@@ -199,8 +199,12 @@ public class StudyController {
                 //now num
                 int num = jpaStudierService.studyNum(studyId);
                 studyForm.setNow_num(num);
+                myStudies.add(studyForm);
             }
-            myStudies.add(studyForm);
+            else {
+                System.out.println("hihihihi");
+            }
+
         }
         return new ResponseEntity<List<StudyForm>>(myStudies, HttpStatus.OK);
     }
