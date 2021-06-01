@@ -107,8 +107,8 @@ public class TalkController {
 		    thisComment = null;
 	        }
 	        else {
-
-	            for (int i =0; i < thisComment.size(); i++) {
+                int listSize = thisComment.size();
+	            for (int i =0; i < listSize; i++) {
 		            if (thisComment.get(i).getCommentWriter().equals(tokenOwner)) {
 			            commentForm.setCommentValid("yes");
 		            }

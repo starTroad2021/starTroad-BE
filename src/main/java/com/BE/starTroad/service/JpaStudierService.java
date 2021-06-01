@@ -35,4 +35,12 @@ public class JpaStudierService {
         return studier;
     }
 
+    public List<Studier> findJoinStudy(String email) {
+        List<Studier> joinStudy = new ArrayList<>();
+        springDataJpaStudierRepository.findByEmail(email).forEach(e -> joinStudy.add(e));
+
+        return joinStudy;
+    }
+
+
 }

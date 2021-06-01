@@ -7,6 +7,7 @@ import com.BE.starTroad.domain.Study;
 import com.BE.starTroad.service.JpaRequestService;
 import com.BE.starTroad.service.JpaStudierService;
 import com.BE.starTroad.service.JpaStudyService;
+import com.BE.starTroad.service.JpaUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,15 +35,42 @@ public class StudyController {
     JpaRequestService jpaRequestService;
 
     @Autowired
+    JpaUserService jpaUserService;
+
+    @Autowired
     JwtTokenUtil jwtTokenUtil;
 
     //스터디 리스트 가져오기
     @GetMapping(value="/{roadmap_id}")
-    public ResponseEntity<List<Study>> studyList(@PathVariable("roadmap_id") Long id) {
+    public ResponseEntity<List<StudyForm>> studyList(@PathVariable("roadmap_id") Long id, @RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+
         int mapId = id.intValue();
         List <Study> studyList = jpaStudyService.findByFollowMap(mapId);
+        StudyForm studyForm = new StudyForm();
+        String leader = "";
+        int study_id;
+        List<StudyForm> studyFormList = new ArrayList<>();
+        int listSize = studyList.size();
+        for (int i=0;i<listSize;i++) {
+            study_id = studyList.get(i).getId();
+            studyForm.setId(study_id);
+            studyForm.setFollow_map(studyList.get(i).getFollowMap());
+            leader = studyList.get(i).getLeader();
+            studyForm.setLeader(leader);
+            studyForm.setCreated_at(studyList.get(i).getCreatedAt().toString());
+            studyForm.setDescription(studyList.get(i).getDescription());
+            studyForm.setMax_num(studyList.get(i).getMaxNum());
+            studyForm.setStatus(studyList.get(i).getStatus());
+            //now_num
+            int num = jpaStudierService.studyNum(study_id);
+            studyForm.setNow_num(num);
+            studyFormList.add(studyForm);
+        }
 
-        return new ResponseEntity<List<Study>>(studyList, HttpStatus.OK);
+        return new ResponseEntity<List<StudyForm>>(studyFormList, HttpStatus.OK);
     }
     //스터디 생성하기
     @PostMapping(value="{roadmap_id}")
@@ -137,24 +165,67 @@ public class StudyController {
     }
     //나의 스터디
     @GetMapping(value="/mystudy")
-    public ResponseEntity<List<Study>> myStudy(@RequestHeader ("Authorization") String token) {
+    public ResponseEntity<List<StudyForm>> myStudy(@RequestHeader ("Authorization") String token) {
 
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
-        List<Study> myStudies = jpaStudyService.findByLeader(tokenOwner);
+        List<StudyForm> myStudies = new ArrayList<>();
+        List<Studier> myStudiers = jpaStudierService.findJoinStudy(tokenOwner);
+        Study study = new Study();
+        StudyForm studyForm = new StudyForm();
+        int listSize = myStudiers.size();
+        int studyId;
+        for (int i=0;i<listSize;i++) {
+            studyId = myStudiers.get(i).getStudyId();
+            study = jpaStudyService.findById(studyId).get();
+            if (study != null) {
+                studyForm.setId(study.getId());
+                studyForm.setFollow_map(study.getFollowMap());
+                studyForm.setLeader(study.getLeader());
+                studyForm.setCreated_at(study.getCreatedAt().toString());
+                studyForm.setDescription(study.getDescription());
+                studyForm.setMax_num(study.getMaxNum());
+                studyForm.setStatus(study.getStatus());
 
-        return new ResponseEntity<List<Study>>(myStudies, HttpStatus.OK);
+                if (study.getLeader().equals(tokenOwner)) {
+                    studyForm.setValid("yes");
+                    studyForm.setJoinValid("yes");
+                }
+                else {
+                    studyForm.setValid("no");
+                    studyForm.setJoinValid("yes");
+                }
+                //now num
+                int num = jpaStudierService.studyNum(studyId);
+                studyForm.setNow_num(num);
+            }
+            myStudies.add(studyForm);
+        }
+        return new ResponseEntity<List<StudyForm>>(myStudies, HttpStatus.OK);
     }
     //스터디 참여 요청 리스트
     @GetMapping(value = "/requestlist")
-    public ResponseEntity<List<Request>> requestList(@RequestHeader ("Authorization") String token) {
+    public ResponseEntity<List<RequestForm>> requestList(@RequestHeader ("Authorization") String token) {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
         List<Request> myRequests = jpaRequestService.findByHead(tokenOwner);
-
-        return new ResponseEntity<List<Request>>(myRequests, HttpStatus.OK);
+        RequestForm req = new RequestForm();
+        String name = "";
+        String requester = "";
+        List<RequestForm> reqForm = new ArrayList<>();
+        int listSize = myRequests.size();
+        for (int i=0;i<listSize;i++) {
+            req.setId(myRequests.get(i).getId());
+            req.setHead(myRequests.get(i).getHead());
+            requester = myRequests.get(i).getRequester();
+            req.setRequester(requester);
+            name = jpaUserService.findByEmail(requester).get().getName();
+            req.setRequesterName(name);
+            reqForm.add(req);
+        }
+        return new ResponseEntity<List<RequestForm>>(reqForm, HttpStatus.OK);
     }
     //스터디 참여요청
     @PostMapping(value = "/{roadmap_id}/{study_id}/ask")
