@@ -173,13 +173,14 @@ public class StudyController {
         List<StudyForm> myStudies = new ArrayList<>();
         List<Studier> myStudiers = jpaStudierService.findJoinStudy(tokenOwner);
         Study study = new Study();
-        StudyForm studyForm = new StudyForm();
         int listSize = myStudiers.size();
         int studyId;
         for (int i=0;i<listSize;i++) {
             studyId = myStudiers.get(i).getStudyId();
             study = jpaStudyService.findById(studyId).get();
             if (study != null) {
+		
+                StudyForm studyForm = new StudyForm();
                 studyForm.setId(studyId);
                 studyForm.setFollow_map(study.getFollowMap());
                 studyForm.setLeader(study.getLeader());
