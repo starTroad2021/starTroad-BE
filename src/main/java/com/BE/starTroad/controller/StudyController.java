@@ -330,9 +330,9 @@ public class StudyController {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
 
+        //리퀘스트 삭제
         List<Request> requests = jpaRequestService.findByStudyId(study_id);
         int listSize = requests.size();
-        //리퀘스트 삭제
         for (int i=0;i<listSize;i++) {
             jpaRequestService.deny(requests.get(i).getId());
         }

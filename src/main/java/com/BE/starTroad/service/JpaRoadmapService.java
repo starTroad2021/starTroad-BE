@@ -82,7 +82,7 @@ public class JpaRoadmapService {
 
             if (springDataJpaRoadmapRepository.findById(mapID).isPresent()) { //받은 roadmap이 존재하는지
                 Roadmap newRoadmap = new Roadmap();
-                newRoadmap.setOwner(email);
+                newRoadmap.setOwner(email); //fork 하는 사람
                 newRoadmap.setName(roadmap.getName());
                 newRoadmap.setTag(roadmap.getTag());
                 newRoadmap.setDescription(roadmap.getDescription());
@@ -128,6 +128,19 @@ public class JpaRoadmapService {
         List<Roadmap> roadmaps = springDataJpaRoadmapRepository.findByOwner(email);
 
         return roadmaps;
+    }
+
+    public Roadmap deleteRoadmap(int mapId) {
+        Long roadmapId = (long) mapId;
+        Optional<Roadmap> delRoadmap = springDataJpaRoadmapRepository.findById(roadmapId);
+
+        if (delRoadmap.isPresent()) {
+            springDataJpaRoadmapRepository.delete(delRoadmap.get());
+            return delRoadmap.get();
+        }
+        else {
+            return null;
+        }
     }
 
 }

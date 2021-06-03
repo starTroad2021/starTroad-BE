@@ -1,11 +1,9 @@
 package com.BE.starTroad.controller;
 
 import com.BE.starTroad.config.JwtTokenUtil;
-import com.BE.starTroad.domain.Like;
-import com.BE.starTroad.domain.Roadmap;
-import com.BE.starTroad.domain.User;
-import com.BE.starTroad.service.JpaLikeService;
-import com.BE.starTroad.service.JpaRoadmapService;
+import com.BE.starTroad.domain.*;
+import com.BE.starTroad.service.*;
+import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import org.hibernate.engine.query.spi.OrdinalParameterDescriptor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -36,6 +34,16 @@ public class RoadmapController {
     JwtTokenUtil jwtTokenUtil;
     @Autowired
     JpaLikeService jpaLikeService;
+    @Autowired
+    JpaTalkService jpaTalkService;
+    @Autowired
+    JpaCommentService jpaCommentService;
+    @Autowired
+    JpaStudyService jpaStudyService;
+    @Autowired
+    JpaStudierService jpaStudierService;
+    @Autowired
+    JpaRequestService jpaRequestService;
 
     @PostMapping(value="/generate")
     public ResponseEntity<Roadmap> generate(RoadmapForm roadmap, @RequestHeader("Authorization") String token) {
@@ -219,11 +227,93 @@ public class RoadmapController {
         }
     }
 
-    /*
+
     //로드맵 삭제 : 해당 로드맵에 포함된 코멘트 -> 토크/ 리퀘스트, 스터디원 -> 스터디 삭제
     // -> 로드맵 삭제
     @PostMapping(value="/delete/{roadmap_id}")
-    */
+    public ResponseEntity<Roadmap> deleteRoadmap(@PathVariable("roadmap_id") Long id,
+                                                 @RequestHeader("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+        Optional<Roadmap> dbRoadmap = jpaRoadmapService.findById(id);
+        String roadmapOwner = "";
+
+        if (dbRoadmap.isPresent()) {
+            roadmapOwner = dbRoadmap.get().getOwner();
+        }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        if (!(tokenOwner.equals(roadmapOwner))) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
+        //토크 조회 & 해당 토크 아래의 코멘트 삭제 -> 토크 삭제
+        int mapId = id.intValue();
+        int talkListSize;
+        int commentListSize;
+        int studyListSize;
+        int requestListSize;
+        int studierListSize;
+        Long talkId;
+        int studyId;
+
+        List<Talk> talks;
+        List<Comment> comments;
+        List<Study> studies;
+        List<Request> requests;
+        List<Studier> studiers;
+
+        //해당 로드맵에 속하는 토크 조회
+        talks = jpaTalkService.findByTalk_Roadmap(mapId);
+        talkListSize = talks.size();
+        for (int i=0;i<talkListSize;i++) {
+            talkId = talks.get(i).getId();
+            //해당 토크 속하는 코멘트 조회
+            comments = jpaCommentService.findByTalk(talkId);
+            commentListSize = comments.size();
+            //코멘트 삭제
+            for (int j=0;i<commentListSize;i++) {
+                jpaCommentService.deleteComment(comments.get(i).getId());
+            }
+            //토크 삭제
+            jpaTalkService.deleteTalk(talkId);
+        }
+
+        //해당 로드맵에 속하는 스터디 조회
+        studies = jpaStudyService.findByFollowMap(mapId);
+        studyListSize = studies.size();
+        for (int i=0;i<studyListSize;i++) {
+            studyId = studies.get(i).getId();
+            //해당 스터디와 연관 있는 리퀘스트와 스터디원 조회
+            requests = jpaRequestService.findByStudyId(studyId);
+            requestListSize = requests.size();
+            studiers = jpaStudierService.findByStudyId(studyId);
+            studierListSize = studiers.size();
+            //리퀘스트 삭제
+            for (int j=0;j<requestListSize;j++) {
+                jpaRequestService.deny(requests.get(i).getId());
+            }
+            //스터디원 삭제
+            for (int j=0;j<studierListSize;j++) {
+                jpaStudierService.deleteStudier(studiers.get(i).getId());
+            }
+            //스터디 삭제
+            jpaStudyService.deleteStudy(studyId);
+        }
+        //로드맵 삭제
+        Roadmap rdmap = jpaRoadmapService.deleteRoadmap(mapId);
+
+        if (rdmap != null) {
+            return new ResponseEntity<Roadmap>(rdmap, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
+        }
+
+    }
 
     @PostMapping(value="/{roadmap_id}/like")
     public ResponseEntity<Roadmap> like(@PathVariable("roadmap_id") Long id, @RequestHeader("Authorization") String token) {
