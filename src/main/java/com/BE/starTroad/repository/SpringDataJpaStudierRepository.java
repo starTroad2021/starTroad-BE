@@ -13,4 +13,5 @@ public interface SpringDataJpaStudierRepository extends JpaRepository<Studier, I
     List<Studier> findByStudyId(int study_id);
     Optional<Studier> findByStudyIdAndEmail(int studyId, String email);
     List<Studier> findByEmail(String email);
+
 }

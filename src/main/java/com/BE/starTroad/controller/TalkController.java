@@ -216,7 +216,13 @@ public class TalkController {
             }
             //talk 삭제
             Talk tk = jpaTalkService.deleteTalk(talkId);
-            return new ResponseEntity<Talk>(tk, HttpStatus.OK);
+            if (tk != null) {
+                return new ResponseEntity<Talk>(tk, HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
+
         }
 
     }
@@ -324,7 +330,12 @@ public class TalkController {
         }
         else {
             Comment cmt = jpaCommentService.deleteComment(commentId);
-            return new ResponseEntity<Comment>(cmt,HttpStatus.OK);
+            if (cmt != null) {
+                return new ResponseEntity<Comment>(cmt,HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            }
         }
     }
 

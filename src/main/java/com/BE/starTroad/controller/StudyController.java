@@ -202,6 +202,10 @@ public class StudyController {
         if (request.isPresent()) {
             int requestId = request.get().getId();
             jpaRequestService.accept(requestId);
+            Studier studier = new Studier();
+            studier.setStudyId(study_id);
+            studier.setEmail(tokenOwner);
+            jpaStudierService.save(studier);
         }
         else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -222,7 +226,7 @@ public class StudyController {
 
         if (request.isPresent()) {
             int requestId = request.get().getId();
-            jpaRequestService.accept(requestId);
+            jpaRequestService.deny(requestId);
         }
         else {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -261,6 +265,9 @@ public class StudyController {
         if (dbStudy.isPresent()) {
             studyOwner = dbStudy.get().getLeader();
         }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
         if (!(tokenOwner.equals(studyOwner))) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
@@ -295,10 +302,47 @@ public class StudyController {
         }
     }
 
-    /*
-    //스터디 탈퇴 : 해당 스터디 리퀘스트 삭제, 해당 스터디 스터디원 삭제 -> 스터디 삭제
+    //스터디 삭제 : 해당 스터디 리퀘스트 삭제, 해당 스터디 스터디원 삭제 -> 스터디 삭제
     @DeleteMapping(value = "/roadmap/study/delete/{roadmap_id}/{study_id}")
-    */
+    public ResponseEntity<Study> deleteStudy(@PathVariable int roadmap_id, @PathVariable int study_id,
+                                             @RequestHeader("Authorization") String token) {
 
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+        Optional<Study> dbStudy = jpaStudyService.findById(study_id);
+        String studyOwner = "";
+
+        if (dbStudy.isPresent()) {
+            studyOwner = dbStudy.get().getLeader();
+        }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        if (!(tokenOwner.equals(studyOwner))) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
+        List<Request> requests = jpaRequestService.findByStudyId(study_id);
+        int listSize = requests.size();
+        //리퀘스트 삭제
+        for (int i=0;i<listSize;i++) {
+            jpaRequestService.deny(requests.get(i).getId());
+        }
+        //스터디원 삭제
+        List<Studier> studiers = jpaStudierService.findByStudyId(study_id);
+        listSize = studiers.size();
+        for (int i=0;i<listSize;i++) {
+            jpaStudierService.deleteStudier(study_id);
+        }
+        //스터디 삭제
+        Study std = jpaStudyService.deleteStudy(study_id);
+
+        if (std != null) {
+            return new ResponseEntity<Study>(std, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

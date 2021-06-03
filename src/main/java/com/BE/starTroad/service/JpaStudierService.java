@@ -6,6 +6,7 @@ import com.BE.starTroad.repository.SpringDataJpaStudierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -52,6 +53,23 @@ public class JpaStudierService {
         return quitRequester.get();
     }
 
+    public Studier deleteStudier(int id) {
 
+        Optional<Studier> delStudier = springDataJpaStudierRepository.findById(id);
+
+        if (delStudier.isPresent()) {
+            springDataJpaStudierRepository.delete(delStudier.get());
+            return delStudier.get();
+        }
+        else {
+            return null;
+        }
+    }
+
+    public List<Studier> findByStudyId(int studyId) {
+        List<Studier> studiers = new ArrayList<>();
+        springDataJpaStudierRepository.findByStudyId(studyId).forEach(e -> studiers.add(e));
+        return studiers;
+    }
 
 }

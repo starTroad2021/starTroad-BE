@@ -13,4 +13,5 @@ public interface SpringDataJpaRequestRepository extends JpaRepository<Request, I
     Optional<Request> findByStudyIdAndRequester(int studyId, String email);
     List<Request> findByRequester(String email);
     List<Request> findByHead(String email);
+    List<Request> findByStudyId(int studyId);
 }

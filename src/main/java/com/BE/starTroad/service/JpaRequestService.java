@@ -43,12 +43,29 @@ public class JpaRequestService {
         return requests;
     }
 
+    public List<Request> findByStudyId(int id) {
+        List<Request> requests = new ArrayList<>();
+        springDataJpaRequestRepository.findByStudyId(id).forEach(e -> requests.add(e));
+
+        return requests;
+    }
     public Request accept(int id) {
         Optional<Request> acceptRequest = springDataJpaRequestRepository.findById(id);
 
         if (acceptRequest.isPresent()) {
             springDataJpaRequestRepository.delete(acceptRequest.get());
             return acceptRequest.get();
+        }
+        else {
+            return null;
+        }
+    }
+    public Request deny(int id) {
+        Optional<Request> denyRequest = springDataJpaRequestRepository.findById(id);
+
+        if (denyRequest.isPresent()) {
+            springDataJpaRequestRepository.delete(denyRequest.get());
+            return denyRequest.get();
         }
         else {
             return null;
