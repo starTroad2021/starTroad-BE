@@ -315,7 +315,7 @@ public class RoadmapController {
 
     }
 
-    @PostMapping(value="/{roadmap_id}/like")
+    @PostMapping(value="/like/{roadmap_id}")
     public ResponseEntity<Roadmap> like(@PathVariable("roadmap_id") Long id, @RequestHeader("Authorization") String token) {
 
         token = token.substring(7);
@@ -336,7 +336,7 @@ public class RoadmapController {
         }
     }
 
-    @PostMapping(value="/{roadmap_id}/unlike")
+    @PostMapping(value="/unlike/{roadmap_id}")
     public ResponseEntity<Roadmap> unlike(@PathVariable("roadmap_id") Long id,  @RequestHeader("Authorization") String token) {
 
         token = token.substring(7);

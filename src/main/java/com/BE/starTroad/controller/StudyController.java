@@ -74,7 +74,7 @@ public class StudyController {
         return new ResponseEntity<List<StudyForm>>(studyFormList, HttpStatus.OK);
     }
     //스터디 생성하기
-    @PostMapping(value="{roadmap_id}")
+    @PostMapping(value="/{roadmap_id}")
     public ResponseEntity<Study> generateStudy(@PathVariable int roadmap_id, StudyForm study, @RequestHeader("Authorization") String token) {
 
         token = token.substring(7);
@@ -119,7 +119,13 @@ public class StudyController {
 
         StudyForm studyForm = new StudyForm();
         Optional<Study> dbStudy = jpaStudyService.findById(study_id);
+
         if (dbStudy.isPresent()) {
+
+            int validId = dbStudy.get().getFollowMap();
+            if (validId != roadmap_id) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
             studyForm.setId(dbStudy.get().getId());
             studyForm.setName(dbStudy.get().getName());
             studyForm.setFollow_map(dbStudy.get().getFollowMap());
@@ -176,6 +182,12 @@ public class StudyController {
         Request newRequest = new Request();
         Optional<Study> dbStudy = jpaStudyService.findById(study_id);
         if (dbStudy.isPresent()) {
+
+            int validId = dbStudy.get().getFollowMap();
+            if (validId != roadmap_id) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+
             studyHead = dbStudy.get().getLeader();
             newRequest.setHead(studyHead);
             newRequest.setRequester(tokenOwner);
@@ -205,10 +217,17 @@ public class StudyController {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
+        Optional<Study> dbStudy = jpaStudyService.findById(study_id);
+        int validId = dbStudy.get().getFollowMap();
+        if (validId != roadmap_id) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
         Optional<Request> request = jpaRequestService.findByStudyIdAndRequester(study_id, requester);
 
         if (request.isPresent()) {
             int requestId = request.get().getId();
+
             jpaRequestService.accept(requestId);
             Studier studier = new Studier();
             studier.setStudyId(study_id);
@@ -230,6 +249,12 @@ public class StudyController {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
+        Optional<Study> dbStudy = jpaStudyService.findById(study_id);
+        int validId = dbStudy.get().getFollowMap();
+        if (validId != roadmap_id) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
         Optional<Request> request = jpaRequestService.findByStudyIdAndRequester(study_id, requester);
 
         if (request.isPresent()) {
@@ -249,6 +274,12 @@ public class StudyController {
                                       @RequestHeader ("Authorization") String token) {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+
+        Optional<Study> dbStudy = jpaStudyService.findById(study_id);
+        int validId = dbStudy.get().getFollowMap();
+        if (validId != roadmap_id) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
 
         Studier studier = jpaStudierService.quit(study_id, tokenOwner);
 
@@ -271,6 +302,11 @@ public class StudyController {
         String studyOwner = "";
 
         if (dbStudy.isPresent()) {
+
+            int validId = dbStudy.get().getFollowMap();
+            if (validId != roadmap_id) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
             studyOwner = dbStudy.get().getLeader();
         }
         else {
@@ -321,6 +357,11 @@ public class StudyController {
         String studyOwner = "";
 
         if (dbStudy.isPresent()) {
+
+            int validId = dbStudy.get().getFollowMap();
+            if (validId != roadmap_id) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
             studyOwner = dbStudy.get().getLeader();
         }
         else {

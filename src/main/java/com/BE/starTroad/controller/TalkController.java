@@ -83,6 +83,10 @@ public class TalkController {
         Optional<Talk> dbTalk = jpaTalkService.findById(talkId);
 
         if (dbTalk.isPresent()) {
+            int validId = dbTalk.get().getTalkRoadmap();
+            if (validId != roadmap_id) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
             talkOwner = dbTalk.get().getTalkWriter();
         }
         else {
@@ -137,6 +141,11 @@ public class TalkController {
         Optional<Talk> dbTalk = jpaTalkService.findById(talkId);
 
         if (dbTalk.isPresent()) {
+
+            int validId = dbTalk.get().getTalkRoadmap();
+            if (validId != roadmap_id) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
             talkForm.setId(dbTalk.get().getId());
             talkForm.setName(dbTalk.get().getName());
             talkForm.setCreated_at(dbTalk.get().getCreated_at().toString());
@@ -197,6 +206,10 @@ public class TalkController {
         Optional<Talk> dbTalk = jpaTalkService.findById(talkId);
 
         if (dbTalk.isPresent()) {
+            int validId = dbTalk.get().getTalkRoadmap();
+            if (validId != roadmap_id) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
             talkOwner = dbTalk.get().getTalkWriter();
         }
         else {
@@ -236,6 +249,12 @@ public class TalkController {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
+        int validId = jpaTalkService.findById((long)talk_id).get().getTalkRoadmap();
+
+        if (validId != roadmap_id) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
         String timestamp = comment.getCreated_at();
         Timestamp time;
         try {
@@ -265,11 +284,21 @@ public class TalkController {
 
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+
+        int validId = jpaTalkService.findById((long)talk_id).get().getTalkRoadmap();
+        if (validId != roadmap_id) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
         Long commentId = (long) comment_id;
         String commentOwner = "";
         Optional<Comment> dbComment = jpaCommentService.findById(commentId);
 
         if (dbComment.isPresent()) {
+            validId = jpaCommentService.findById((long)comment_id).get().getCommentTalk();
+            if (validId != talk_id) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
             commentOwner = dbComment.get().getCommentWriter();
         }
         else {
@@ -314,11 +343,20 @@ public class TalkController {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
+        int validId = jpaTalkService.findById((long)talk_id).get().getTalkRoadmap();
+        if (validId != roadmap_id) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
         Long commentId = (long) comment_id;
         String commentOwner = "";
         Optional<Comment> dbComment = jpaCommentService.findById(commentId);
 
         if (dbComment.isPresent()) {
+            validId = jpaCommentService.findById((long)comment_id).get().getCommentTalk();
+            if (validId != talk_id) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
             commentOwner = dbComment.get().getCommentWriter();
         }
         else {
