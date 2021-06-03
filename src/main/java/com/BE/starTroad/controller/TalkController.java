@@ -134,7 +134,7 @@ public class TalkController {
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
         TalkForm talkForm = new TalkForm();
-        CommentForm commentForm = new CommentForm();
+
 
         List<CommentForm> comments = new ArrayList<>();
         Long talkId = (long) talk_id;
@@ -168,6 +168,7 @@ public class TalkController {
 	        else {
                 int listSize = thisComment.size();
 	            for (int i =0; i < listSize; i++) {
+                    CommentForm commentForm = new CommentForm();
 		            if (thisComment.get(i).getCommentWriter().equals(tokenOwner)) {
 			            commentForm.setCommentValid("yes");
 		            }
