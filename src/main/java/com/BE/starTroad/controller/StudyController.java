@@ -381,11 +381,11 @@ public class StudyController {
         List<Studier> studiers = jpaStudierService.findByStudyId(study_id);
         listSize = studiers.size();
         for (int i=0;i<listSize;i++) {
-            jpaStudierService.deleteStudier(study_id);
+            jpaStudierService.deleteStudier(studiers.get(i).getId());
         }
         //스터디 삭제
         Study std = jpaStudyService.deleteStudy(study_id);
-
+	
         if (std != null) {
             return new ResponseEntity<Study>(std, HttpStatus.OK);
         }
