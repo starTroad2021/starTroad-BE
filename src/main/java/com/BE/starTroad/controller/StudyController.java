@@ -347,7 +347,7 @@ public class StudyController {
     }
 
     //스터디 삭제 : 해당 스터디 리퀘스트 삭제, 해당 스터디 스터디원 삭제 -> 스터디 삭제
-    @DeleteMapping(value = "/roadmap/study/delete/{roadmap_id}/{study_id}")
+    @DeleteMapping(value = "/delete/{roadmap_id}/{study_id}")
     public ResponseEntity<Study> deleteStudy(@PathVariable int roadmap_id, @PathVariable int study_id,
                                              @RequestHeader("Authorization") String token) {
 
