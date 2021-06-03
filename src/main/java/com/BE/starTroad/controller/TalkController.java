@@ -246,7 +246,7 @@ public class TalkController {
 
         newComment.setId(commentId);
         newComment.setCreated_at(time);
-        newComment.setCommentTalk(comment_id);
+        newComment.setCommentTalk(talk_id);
         newComment.setCommentWriter(commentOwner);
         newComment.setContent(comment.getContent());
 
