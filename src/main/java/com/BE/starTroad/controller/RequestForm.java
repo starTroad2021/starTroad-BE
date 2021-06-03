@@ -6,6 +6,8 @@ public class RequestForm {
     private String head;
     private String requester;
     private String requesterName;
+    private int study_id;
+    private String study_name;
 
     public int getId() {
         return id;
@@ -37,5 +39,21 @@ public class RequestForm {
 
     public void setRequesterName(String requesterName) {
         this.requesterName = requesterName;
+    }
+
+    public int getStudy_id() {
+        return study_id;
+    }
+
+    public void setStudy_id(int study_id) {
+        this.study_id = study_id;
+    }
+
+    public String getStudy_name() {
+        return study_name;
+    }
+
+    public void setStudy_name(String study_name) {
+        this.study_name = study_name;
     }
 }

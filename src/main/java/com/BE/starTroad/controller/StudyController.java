@@ -214,13 +214,19 @@ public class StudyController {
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
         List<Request> myRequests = jpaRequestService.findByHead(tokenOwner);
-        RequestForm req = new RequestForm();
         String name = "";
+        int study_id;
+        String study_name = "";
         String requester = "";
         List<RequestForm> reqForm = new ArrayList<>();
         int listSize = myRequests.size();
         for (int i=0;i<listSize;i++) {
+            RequestForm req = new RequestForm();
             req.setId(myRequests.get(i).getId());
+            study_id = myRequests.get(i).getStudyId();
+            req.setStudy_id(study_id);
+            study_name = jpaStudyService.findById(study_id).get().getName();
+            req.setStudy_name(study_name);
             req.setHead(myRequests.get(i).getHead());
             requester = myRequests.get(i).getRequester();
             req.setRequester(requester);
