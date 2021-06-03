@@ -180,7 +180,15 @@ public class StudyController {
             newRequest.setHead(studyHead);
             newRequest.setRequester(tokenOwner);
             newRequest.setStudyId(study_id);
-            jpaRequestService.save(newRequest);
+
+            Optional<Request> req = jpaRequestService.findByStudyIdAndRequester(study_id, tokenOwner);
+
+            if (req.isPresent()) {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+            else {
+                jpaRequestService.save(newRequest);
+            }
         }
         else {
             return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
@@ -204,7 +212,7 @@ public class StudyController {
             jpaRequestService.accept(requestId);
             Studier studier = new Studier();
             studier.setStudyId(study_id);
-            studier.setEmail(tokenOwner);
+            studier.setEmail(requester);
             jpaStudierService.save(studier);
         }
         else {
