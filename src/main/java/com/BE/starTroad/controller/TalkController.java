@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -120,8 +121,6 @@ public class TalkController {
 
     }
 
-    //토크 삭제
-
     //한 talk 조회
     @GetMapping(value="/{roadmap_id}/{talk_id}")
     public ResponseEntity<TalkForm> detailTalk(@PathVariable int roadmap_id, @PathVariable int talk_id,
@@ -181,6 +180,47 @@ public class TalkController {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+
+    //토크 삭제 : 해당 토크에 포함된 코멘트 삭제 -> 토크 삭제
+    @DeleteMapping(value="/delete/{roadmap_id}/{talk_id}")
+    public ResponseEntity<Talk> deleteTalk(@PathVariable int roadmap_id, @PathVariable int talk_id,
+                                           @PathVariable int comment_id, @RequestHeader ("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+
+        Long talkId = (long) talk_id;
+        Long commentId = (long) comment_id;
+        String talkOwner = "";
+        String commentOwner = "";
+
+        Optional<Talk> dbTalk = jpaTalkService.findById(talkId);
+
+        if (dbTalk.isPresent()) {
+            talkOwner = dbTalk.get().getTalkWriter();
+        }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        if (!(talkOwner.equals(tokenOwner))) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+        else { //삭제 가능
+            //comments 삭제
+            List<Comment> comments = jpaCommentService.findByTalk(talkId);
+            int listSize = comments.size();
+
+            for (int i=0;i<listSize;i++) {
+                jpaCommentService.deleteComment(comments.get(i).getId());
+            }
+            //talk 삭제
+            Talk tk = jpaTalkService.deleteTalk(talkId);
+            return new ResponseEntity<Talk>(tk, HttpStatus.OK);
+        }
+
+    }
+
 
     //댓글 작성
     @PostMapping(value="/{roadmap_id}/{talk_id}")
@@ -260,4 +300,32 @@ public class TalkController {
         }
     }
     //댓글 삭제
+    @DeleteMapping(value="/delete/{roadmap_id}/{talk_id}/{comment_id}")
+    public ResponseEntity<Comment> deleteComment(@PathVariable int roadmap_id, @PathVariable int talk_id,
+                                                 @PathVariable int comment_id,
+                                                 @RequestHeader ("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+
+        Long commentId = (long) comment_id;
+        String commentOwner = "";
+        Optional<Comment> dbComment = jpaCommentService.findById(commentId);
+
+        if (dbComment.isPresent()) {
+            commentOwner = dbComment.get().getCommentWriter();
+        }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        if (!(commentOwner.equals(tokenOwner))) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+        else {
+            Comment cmt = jpaCommentService.deleteComment(commentId);
+            return new ResponseEntity<Comment>(cmt,HttpStatus.OK);
+        }
+    }
+
 }

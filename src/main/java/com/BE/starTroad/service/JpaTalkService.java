@@ -54,4 +54,15 @@ public class JpaTalkService {
         }
     }
 
+    public Talk deleteTalk(Long talkId) {
+        Optional<Talk> delTalk = springDataJpaTalkRepository.findById(talkId);
+
+        if (delTalk.isPresent()) {
+            springDataJpaTalkRepository.delete(delTalk.get());
+            return delTalk.get();
+        }
+        else {
+            return null;
+        }
+    }
 }

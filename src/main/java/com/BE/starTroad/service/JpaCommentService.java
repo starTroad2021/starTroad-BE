@@ -51,5 +51,16 @@ public class JpaCommentService {
         return comment;
     }
 
+    public Comment deleteComment(Long commentId) {
+        Optional<Comment> delComment = springDataJpaCommentRepository.findById(commentId);
 
+        if (delComment.isPresent()) {
+            springDataJpaCommentRepository.delete(delComment.get());
+            return delComment.get();
+        }
+        else {
+            return null;
+        }
+
+    }
 }

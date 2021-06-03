@@ -8,6 +8,7 @@ public class RequestForm {
     private String requesterName;
     private int study_id;
     private String study_name;
+    private int roadmap_id;
 
     public int getId() {
         return id;
@@ -55,5 +56,13 @@ public class RequestForm {
 
     public void setStudy_name(String study_name) {
         this.study_name = study_name;
+    }
+
+    public int getRoadmap_id() {
+        return roadmap_id;
+    }
+
+    public void setRoadmap_id(int roadmap_id) {
+        this.roadmap_id = roadmap_id;
     }
 }

@@ -48,7 +48,10 @@ public class JpaRequestService {
 
         if (acceptRequest.isPresent()) {
             springDataJpaRequestRepository.delete(acceptRequest.get());
+            return acceptRequest.get();
         }
-        return acceptRequest.get();
+        else {
+            return null;
+        }
     }
 }

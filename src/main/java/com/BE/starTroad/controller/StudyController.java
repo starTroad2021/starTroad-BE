@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/api/study")
+@RequestMapping("/api/roadmap/study")
 public class StudyController {
 
     @Autowired
@@ -164,80 +164,10 @@ public class StudyController {
            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
-    //나의 스터디
-    @GetMapping(value="/mystudy")
-    public ResponseEntity<List<StudyForm>> myStudy(@RequestHeader ("Authorization") String token) {
 
-        token = token.substring(7);
-        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
-        List<StudyForm> myStudies = new ArrayList<>();
-        List<Studier> myStudiers = jpaStudierService.findJoinStudy(tokenOwner);
-        Study study = new Study();
-        int listSize = myStudiers.size();
-        int studyId;
-        for (int i=0;i<listSize;i++) {
-            studyId = myStudiers.get(i).getStudyId();
-            study = jpaStudyService.findById(studyId).get();
-            if (study != null) {
-		
-                StudyForm studyForm = new StudyForm();
-                studyForm.setId(studyId);
-                studyForm.setName(study.getName());
-                studyForm.setFollow_map(study.getFollowMap());
-                studyForm.setLeader(study.getLeader());
-                studyForm.setCreated_at(study.getCreatedAt().toString());
-                studyForm.setDescription(study.getDescription());
-                studyForm.setMax_num(study.getMaxNum());
-                studyForm.setStatus(study.getStatus());
-
-                if (study.getLeader().equals(tokenOwner)) {
-                    studyForm.setValid("yes");
-                    studyForm.setJoinValid("yes");
-                }
-                else {
-                    studyForm.setValid("no");
-                    studyForm.setJoinValid("yes");
-                }
-                //now num
-                int num = jpaStudierService.studyNum(studyId);
-                studyForm.setNow_num(num);
-                myStudies.add(studyForm);
-            }
-        }
-        return new ResponseEntity<List<StudyForm>>(myStudies, HttpStatus.OK);
-    }
-    //스터디 참여 요청 리스트
-    @GetMapping(value = "/requestlist")
-    public ResponseEntity<List<RequestForm>> requestList(@RequestHeader ("Authorization") String token) {
-        token = token.substring(7);
-        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
-
-        List<Request> myRequests = jpaRequestService.findByHead(tokenOwner);
-        String name = "";
-        int study_id;
-        String study_name = "";
-        String requester = "";
-        List<RequestForm> reqForm = new ArrayList<>();
-        int listSize = myRequests.size();
-        for (int i=0;i<listSize;i++) {
-            RequestForm req = new RequestForm();
-            req.setId(myRequests.get(i).getId());
-            study_id = myRequests.get(i).getStudyId();
-            req.setStudy_id(study_id);
-            study_name = jpaStudyService.findById(study_id).get().getName();
-            req.setStudy_name(study_name);
-            req.setHead(myRequests.get(i).getHead());
-            requester = myRequests.get(i).getRequester();
-            req.setRequester(requester);
-            name = jpaUserService.findByEmail(requester).get().getName();
-            req.setRequesterName(name);
-            reqForm.add(req);
-        }
-        return new ResponseEntity<List<RequestForm>>(reqForm, HttpStatus.OK);
-    }
     //스터디 참여요청
-    @PostMapping(value = "/{roadmap_id}/{study_id}/ask")
+    @PostMapping(value = "/ask/{roadmap_id}/{study_id}")
     public ResponseEntity<Request> studyRequest(@PathVariable Long roadmap_id, @PathVariable int study_id, @RequestHeader ("Authorization") String token) {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
@@ -260,7 +190,7 @@ public class StudyController {
     }
 
     //스터디 참여요청 수락
-    @PostMapping(value = "/{roadmap_id}/{study_id}/accept")
+    @PostMapping(value = "/accept/{roadmap_id}/{study_id}")
     public ResponseEntity<Request> acceptRequest(@PathVariable Long roadmap_id, @PathVariable int study_id,
                                                  @RequestHeader ("Authorization") String token,
                                                  String requester) {
@@ -281,7 +211,7 @@ public class StudyController {
     }
 
     //스터디 참여요청 거절
-    @PostMapping(value = "/{roadmap_id}/{study_id}/deny")
+    @PostMapping(value = "/deny/{roadmap_id}/{study_id}")
     public ResponseEntity<Request> denyRequest(@PathVariable Long roadmap_id, @PathVariable int study_id,
                                                  @RequestHeader ("Authorization") String token,
                                                  String requester) {
@@ -302,7 +232,7 @@ public class StudyController {
     }
 
     //스터디 탈퇴
-    @PostMapping(value = "/{roadmap_id}/{study_id}/quit")
+    @PostMapping(value = "/quit/{roadmap_id}/{study_id}")
     public ResponseEntity<Studier> quitStudy(@PathVariable Long roadmap_id, @PathVariable int study_id,
                                       @RequestHeader ("Authorization") String token) {
         token = token.substring(7);
@@ -346,7 +276,7 @@ public class StudyController {
         }
 
         Study newStudy = new Study();
-	newStudy.setId(study_id);
+	    newStudy.setId(study_id);
         newStudy.setName(study.getName());
         newStudy.setFollowMap(study.getFollow_map());
         newStudy.setLeader(tokenOwner);
@@ -364,6 +294,11 @@ public class StudyController {
             return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
         }
     }
+
+    /*
+    //스터디 탈퇴 : 해당 스터디 리퀘스트 삭제, 해당 스터디 스터디원 삭제 -> 스터디 삭제
+    @DeleteMapping(value = "/roadmap/study/delete/{roadmap_id}/{study_id}")
+    */
 
 
 }
