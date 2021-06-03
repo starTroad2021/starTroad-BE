@@ -49,14 +49,15 @@ public class StudyController {
 
         int mapId = id.intValue();
         List <Study> studyList = jpaStudyService.findByFollowMap(mapId);
-        StudyForm studyForm = new StudyForm();
         String leader = "";
         int study_id;
         List<StudyForm> studyFormList = new ArrayList<>();
         int listSize = studyList.size();
         for (int i=0;i<listSize;i++) {
+            StudyForm studyForm = new StudyForm();
             study_id = studyList.get(i).getId();
             studyForm.setId(study_id);
+            studyForm.setName(studyList.get(i).getName());
             studyForm.setFollow_map(studyList.get(i).getFollowMap());
             leader = studyList.get(i).getLeader();
             studyForm.setLeader(leader);
@@ -182,6 +183,7 @@ public class StudyController {
 		
                 StudyForm studyForm = new StudyForm();
                 studyForm.setId(studyId);
+                studyForm.setName(study.getName());
                 studyForm.setFollow_map(study.getFollowMap());
                 studyForm.setLeader(study.getLeader());
                 studyForm.setCreated_at(study.getCreatedAt().toString());
