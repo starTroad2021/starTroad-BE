@@ -36,4 +36,22 @@ public class JpaTalkService {
         Optional<Talk> talk = springDataJpaTalkRepository.findById(talkId);
         return talk;
     }
+    public Talk update(Long id, Talk talk) {
+        Optional<Talk> dbTalk = springDataJpaTalkRepository.findById(id);
+
+        if (dbTalk.isPresent()) {
+            dbTalk.get().setId(id);
+            dbTalk.get().setName(talk.getName());
+            //dbTalk.get().setCreated_at(talk.getCreated_at());
+            dbTalk.get().setTalkRoadmap(talk.getTalkRoadmap());
+            dbTalk.get().setTalkWriter(talk.getTalkWriter());
+            dbTalk.get().setDescription(talk.getDescription());
+            springDataJpaTalkRepository.save(dbTalk.get());
+            return dbTalk.get();
+        }
+        else {
+            return null;
+        }
+    }
+
 }

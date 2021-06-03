@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class JpaCommentService {
@@ -25,6 +26,23 @@ public class JpaCommentService {
         List<Comment> comments = new ArrayList<>();
         springDataJpaCommentRepository.findAllByCommentTalk(id).forEach(e -> comments.add(e));
         return comments;
+    }
+
+    public Comment update(Long id, Comment comment) {
+        Optional<Comment> dbComment = springDataJpaCommentRepository.findById(id);
+
+        if (dbComment.isPresent()) {
+            dbComment.get().setId(id);
+            //dbComment.get().setCreated_at(comment.getCreated_at());
+            dbComment.get().setCommentTalk(comment.getCommentTalk());
+            dbComment.get().setCommentWriter(comment.getCommentWriter());
+            dbComment.get().setContent(comment.getContent());
+            springDataJpaCommentRepository.save(dbComment.get());
+            return dbComment.get();
+        }
+        else {
+            return null;
+        }
     }
 
 }

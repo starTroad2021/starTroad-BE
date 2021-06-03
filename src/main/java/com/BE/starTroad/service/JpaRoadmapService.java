@@ -36,7 +36,7 @@ public class JpaRoadmapService {
         if (dbRoadmap.isPresent()) {
             dbRoadmap.get().setId(id);
             dbRoadmap.get().setName(roadmap.getName());
-            dbRoadmap.get().setCreated_at(roadmap.getCreated_at());
+            //dbRoadmap.get().setCreated_at(roadmap.getCreated_at());
             dbRoadmap.get().setTag(roadmap.getTag());
             dbRoadmap.get().setDescription(roadmap.getDescription());
             dbRoadmap.get().setOwner(roadmap.getOwner());
@@ -44,7 +44,7 @@ public class JpaRoadmapService {
             dbRoadmap.get().setInformation(roadmap.getInformation());
             dbRoadmap.get().setLikeCount(roadmap.getLikeCount());
             springDataJpaRoadmapRepository.save(dbRoadmap.get());
-            return roadmap;
+            return dbRoadmap.get();
         }
         else {
             return null;

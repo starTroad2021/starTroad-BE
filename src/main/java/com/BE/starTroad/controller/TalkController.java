@@ -71,9 +71,57 @@ public class TalkController {
 
     }
 
+    //토크 수정
+    @PutMapping(value="/modify/{roadmap_id}/{talk_id}")
+    public ResponseEntity<Talk> modifyTalk(@PathVariable int roadmap_id, @PathVariable int talk_id,
+                                       TalkForm talk, @RequestHeader ("Authorization") String token) {
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+        String talkOwner = "";
+        Long talkId = (long) talk_id;
+        Optional<Talk> dbTalk = jpaTalkService.findById(talkId);
+
+        if (dbTalk.isPresent()) {
+            talkOwner = dbTalk.get().getTalkWriter();
+        }
+        if (!(talkOwner.equals(talkOwner))) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
+
+        String timestamp = talk.getCreated_at();
+        Timestamp time;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+            Date parsedDate = dateFormat.parse(timestamp);
+            time = new Timestamp(parsedDate.getTime());
+        } catch(Exception e) {
+            time = new Timestamp(System.currentTimeMillis());
+        }
+        Talk newTalk = new Talk();
+
+        newTalk.setId(talk.getId());
+        newTalk.setName(talk.getName());
+        newTalk.setCreated_at(time);
+        newTalk.setTalkRoadmap(talk.getTalk_roadmap());
+        newTalk.setTalkWriter(talk.getTalk_writer());
+        newTalk.setDescription(talk.getDescription());
+
+        Talk tk = jpaTalkService.update(talkId, newTalk);
+
+        if (tk != null) {
+            return new ResponseEntity<Talk>(tk, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    //토크 삭제
+
     //한 talk 조회
     @GetMapping(value="/{roadmap_id}/{talk_id}")
-    public ResponseEntity<TalkForm> detailTalk(@PathVariable int roadmap_id, @PathVariable long talk_id,
+    public ResponseEntity<TalkForm> detailTalk(@PathVariable int roadmap_id, @PathVariable int talk_id,
                                                @RequestHeader ("Authorization") String token) {
 
         token = token.substring(7);
@@ -83,8 +131,8 @@ public class TalkController {
         CommentForm commentForm = new CommentForm();
 
         List<CommentForm> comments = new ArrayList<>();
-        
-        Optional<Talk> dbTalk = jpaTalkService.findById(talk_id);
+        Long talkId = (long) talk_id;
+        Optional<Talk> dbTalk = jpaTalkService.findById(talkId);
 
         if (dbTalk.isPresent()) {
             talkForm.setId(dbTalk.get().getId());
@@ -101,7 +149,7 @@ public class TalkController {
                 talkForm.setTalkValid("no");
             }
 
-            List<Comment> thisComment = jpaCommentService.findByTalk(talk_id);
+            List<Comment> thisComment = jpaCommentService.findByTalk(talkId);
 
 	        if (thisComment.size() == 0) {
 		    thisComment = null;
@@ -131,6 +179,7 @@ public class TalkController {
         }
     }
 
+    //댓글 작성
     @PostMapping(value="/{roadmap_id}/{talk_id}")
     public ResponseEntity<Comment> writeComment(@PathVariable int roadmap_id, @PathVariable int talk_id,
                                          CommentForm comment, @RequestHeader ("Authorization") String token) {
@@ -159,4 +208,41 @@ public class TalkController {
         return new ResponseEntity<Comment>(newComment, HttpStatus.OK);
     }
 
+    //댓글 수정
+    @PutMapping(value="/modify/{roadmap_id}/{talk_id}/{comment_id}")
+    public ResponseEntity<Comment> modifyComment(@PathVariable int roadmap_id, @PathVariable int talk_id,
+                                                 @PathVariable int comment_id, CommentForm comment,
+                                                 @RequestHeader ("Authorization") String token) {
+
+        token = token.substring(7);
+        String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
+        Long commentId = (long) comment_id;
+
+        String timestamp = comment.getCreated_at();
+        Timestamp time;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+            Date parsedDate = dateFormat.parse(timestamp);
+            time = new Timestamp(parsedDate.getTime());
+        } catch(Exception e) {
+            time = new Timestamp(System.currentTimeMillis());
+        }
+        Comment newComment = new Comment();
+
+        newComment.setId(commentId);
+        newComment.setCreated_at(time);
+        newComment.setCommentTalk(comment.getComment_talk());
+        newComment.setCommentWriter(comment.getComment_writer());
+        newComment.setContent(comment.getContent());
+
+        Comment cmt = jpaCommentService.update(commentId, newComment);
+
+        if (cmt != null) {
+            return new ResponseEntity<Comment>(cmt, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+    //댓글 삭제
 }
