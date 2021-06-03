@@ -230,7 +230,7 @@ public class RoadmapController {
 
     //로드맵 삭제 : 해당 로드맵에 포함된 코멘트 -> 토크/ 리퀘스트, 스터디원 -> 스터디 삭제
     // -> 로드맵 삭제
-    @PostMapping(value="/delete/{roadmap_id}")
+    @DeleteMapping(value="/delete/{roadmap_id}")
     public ResponseEntity<Roadmap> deleteRoadmap(@PathVariable("roadmap_id") Long id,
                                                  @RequestHeader("Authorization") String token) {
 
