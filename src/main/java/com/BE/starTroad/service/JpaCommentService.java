@@ -45,4 +45,9 @@ public class JpaCommentService {
         }
     }
 
+    public Optional<Comment> findById(Long commentId) {
+        Optional<Comment> comment = springDataJpaCommentRepository.findById(commentId);
+        return comment;
+    }
+
 }

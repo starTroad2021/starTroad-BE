@@ -84,6 +84,9 @@ public class TalkController {
         if (dbTalk.isPresent()) {
             talkOwner = dbTalk.get().getTalkWriter();
         }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
         if (!(talkOwner.equals(talkOwner))) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
@@ -99,11 +102,11 @@ public class TalkController {
         }
         Talk newTalk = new Talk();
 
-        newTalk.setId(talk.getId());
+        newTalk.setId(talkId);
         newTalk.setName(talk.getName());
         newTalk.setCreated_at(time);
-        newTalk.setTalkRoadmap(talk.getTalk_roadmap());
-        newTalk.setTalkWriter(talk.getTalk_writer());
+        newTalk.setTalkRoadmap(roadmap_id);
+        newTalk.setTalkWriter(talkOwner);
         newTalk.setDescription(talk.getDescription());
 
         Talk tk = jpaTalkService.update(talkId, newTalk);
@@ -217,6 +220,18 @@ public class TalkController {
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
         Long commentId = (long) comment_id;
+        String commentOwner = "";
+        Optional<Comment> dbComment = jpaCommentService.findById(commentId);
+
+        if (dbComment.isPresent()) {
+            commentOwner = dbComment.get().getCommentWriter();
+        }
+        else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        if (!(commentOwner.equals(tokenOwner))) {
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+        }
 
         String timestamp = comment.getCreated_at();
         Timestamp time;
@@ -231,8 +246,8 @@ public class TalkController {
 
         newComment.setId(commentId);
         newComment.setCreated_at(time);
-        newComment.setCommentTalk(comment.getComment_talk());
-        newComment.setCommentWriter(comment.getComment_writer());
+        newComment.setCommentTalk(comment_id);
+        newComment.setCommentWriter(commentOwner);
         newComment.setContent(comment.getContent());
 
         Comment cmt = jpaCommentService.update(commentId, newComment);
