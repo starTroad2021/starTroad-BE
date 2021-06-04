@@ -194,13 +194,12 @@ public class TalkController {
     //토크 삭제 : 해당 토크에 포함된 코멘트 삭제 -> 토크 삭제
     @DeleteMapping(value="/delete/{roadmap_id}/{talk_id}")
     public ResponseEntity<Talk> deleteTalk(@PathVariable int roadmap_id, @PathVariable int talk_id,
-                                           @PathVariable int comment_id, @RequestHeader ("Authorization") String token) {
+                                           @RequestHeader ("Authorization") String token) {
 
         token = token.substring(7);
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
         Long talkId = (long) talk_id;
-        Long commentId = (long) comment_id;
         String talkOwner = "";
         String commentOwner = "";
 
