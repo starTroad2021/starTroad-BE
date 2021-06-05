@@ -90,6 +90,8 @@ public class JpaRoadmapService {
                 newRoadmap.setOwner(email); //fork 하는 사람
                 newRoadmap.setGenerator(roadmap.getGenerator());
                 newRoadmap.setInformation(roadmap.getInformation());
+                newRoadmap.setInformation(roadmap.getInformation());
+                newRoadmap.setImage(roadmap.getImage());
 
                 try {
                     springDataJpaRoadmapRepository.save(newRoadmap);
