@@ -82,13 +82,15 @@ public class JpaRoadmapService {
 
             if (springDataJpaRoadmapRepository.findById(mapID).isPresent()) { //받은 roadmap이 존재하는지
                 Roadmap newRoadmap = new Roadmap();
-                newRoadmap.setOwner(email); //fork 하는 사람
                 newRoadmap.setName(roadmap.getName());
+                newRoadmap.setCreated_at(time);
                 newRoadmap.setTag(roadmap.getTag());
+                newRoadmap.setSummary(roadmap.getSummary());
                 newRoadmap.setDescription(roadmap.getDescription());
+                newRoadmap.setOwner(email); //fork 하는 사람
                 newRoadmap.setGenerator(roadmap.getGenerator());
                 newRoadmap.setInformation(roadmap.getInformation());
-                newRoadmap.setCreated_at(time);
+
                 try {
                     springDataJpaRoadmapRepository.save(newRoadmap);
                     return newRoadmap;

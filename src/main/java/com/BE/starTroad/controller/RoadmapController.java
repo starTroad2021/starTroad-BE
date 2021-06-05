@@ -209,7 +209,6 @@ public class RoadmapController {
         String tokenOwner = jwtTokenUtil.getUsernameFromToken(token);
 
         Roadmap rdmap = new Roadmap();
-        System.out.println(id);
         Optional<Roadmap> roadmap = jpaRoadmapService.findById(id);
 
         if (roadmap.isPresent()) {
