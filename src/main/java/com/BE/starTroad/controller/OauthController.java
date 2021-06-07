@@ -25,15 +25,14 @@ public class OauthController {
 
     @Autowired
     private OauthService oauthService;
-    //@Autowired
-    //private UserService userService;
+
     @Autowired
     private JpaUserService jpaUserService;
 
     @Autowired
     private JwtTokenService jwtTokenService;
 
-
+    /*
     @GetMapping(value = "/{socialLoginType}")
     public void socialLoginType(
             @PathVariable(name = "socialLoginType") SocialLoginType socialLoginType) {
@@ -45,6 +44,7 @@ public class OauthController {
             System.out.println(e);
         }
     }
+    */
 
     @PostMapping(value = "/{socialLoginType}/token")
     public ResponseEntity<String> getToken(@PathVariable(name="socialLoginType") SocialLoginType socialLoginType,
