@@ -2,7 +2,6 @@ package com.BE.starTroad.controller;
 
 import com.BE.starTroad.config.JwtTokenUtil;
 import com.BE.starTroad.domain.Comment;
-import com.BE.starTroad.domain.Roadmap;
 import com.BE.starTroad.domain.Talk;
 import com.BE.starTroad.service.JpaCommentService;
 import com.BE.starTroad.service.JpaTalkService;
@@ -11,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

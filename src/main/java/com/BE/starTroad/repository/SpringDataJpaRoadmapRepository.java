@@ -1,7 +1,6 @@
 package com.BE.starTroad.repository;
 
 import com.BE.starTroad.domain.Roadmap;
-import com.BE.starTroad.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

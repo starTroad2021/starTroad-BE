@@ -1,14 +1,11 @@
 package com.BE.starTroad.service;
 
 import com.BE.starTroad.domain.Roadmap;
-import com.BE.starTroad.repository.SpringDataJpaLikeRepository;
 import com.BE.starTroad.repository.SpringDataJpaRoadmapRepository;
 import com.BE.starTroad.repository.SpringDataJpaUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;

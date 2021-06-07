@@ -3,19 +3,11 @@ package com.BE.starTroad.controller;
 import com.BE.starTroad.config.JwtTokenUtil;
 import com.BE.starTroad.domain.*;
 import com.BE.starTroad.service.*;
-import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import org.hibernate.engine.query.spi.OrdinalParameterDescriptor;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.print.attribute.standard.JobSheets;
-import javax.swing.text.html.Option;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -78,17 +70,14 @@ public class RoadmapController {
 
     @GetMapping(value="/search")
     public ResponseEntity<List<Roadmap>> search(String name) {
-   
-    /*public ResponseEntity<List<Roadmap>> search(String name, String tag) {*/
-	List<Roadmap> roadmapsName = new ArrayList<>();
-        //List<Roadmap> roadmapsTag = new ArrayList<>();
+
+	    List<Roadmap> roadmapsName = new ArrayList<>();
+
         List<Roadmap> roadmaps = new ArrayList<>();
 
         roadmapsName = jpaRoadmapService.findByName(name);
-        //roadmapsTag = jpaRoadmapService.findByTag(tag);
 
         roadmaps.addAll(roadmapsName);
-        //roadmaps.addAll(roadmapsTag);
 
         return new ResponseEntity<List<Roadmap>> (roadmaps, HttpStatus.OK);
     }
@@ -256,14 +245,18 @@ public class RoadmapController {
         int studyListSize;
         int requestListSize;
         int studierListSize;
+        int likeListSize;
         Long talkId;
+        Long likeId;
         int studyId;
+
 
         List<Talk> talks;
         List<Comment> comments;
         List<Study> studies;
         List<Request> requests;
         List<Studier> studiers;
+        List<Like> likes;
 
         //해당 로드맵에 속하는 토크 조회
         talks = jpaTalkService.findByTalk_Roadmap(mapId);
@@ -302,6 +295,15 @@ public class RoadmapController {
             //스터디 삭제
             jpaStudyService.deleteStudy(studyId);
         }
+        //좋아요 삭제
+        likes =jpaLikeService.findByRoadmap_id(mapId);
+        likeListSize = likes.size();
+        for (int i=0;i<likeListSize;i++) {
+            likeId = likes.get(i).getId();
+            jpaLikeService.deleteLike(likeId);
+        }
+
+
         //로드맵 삭제
         Roadmap rdmap = jpaRoadmapService.deleteRoadmap(mapId);
 

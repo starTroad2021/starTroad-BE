@@ -1,6 +1,5 @@
 package com.BE.starTroad.service;
 
-import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.BE.starTroad.domain.Request;
 import com.BE.starTroad.repository.SpringDataJpaRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;

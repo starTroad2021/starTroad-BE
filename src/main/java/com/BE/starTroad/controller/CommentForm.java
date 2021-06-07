@@ -1,10 +1,5 @@
 package com.BE.starTroad.controller;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.sql.Timestamp;
-
 public class CommentForm {
 
     private Long id;

@@ -1,7 +1,5 @@
 package com.BE.starTroad.controller;
 
-import com.BE.starTroad.domain.Comment;
-
 import java.util.List;
 
 public class TalkForm {

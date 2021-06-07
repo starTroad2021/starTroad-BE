@@ -1,9 +1,5 @@
 package com.BE.starTroad.controller;
 
-import org.json.simple.JSONObject;
-
-import java.sql.Timestamp;
-
 public class RoadmapForm {
 
     private int id;

@@ -1,10 +1,6 @@
 package com.BE.starTroad.domain;
 
-
-import org.json.simple.JSONObject;
-
 import javax.persistence.*;
-import java.sql.Time;
 import java.sql.Timestamp;
 
 @Entity(name="roadmap")

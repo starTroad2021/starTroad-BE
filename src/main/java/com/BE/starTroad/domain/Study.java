@@ -1,8 +1,5 @@
 package com.BE.starTroad.domain;
 
-import org.hibernate.resource.jdbc.spi.JdbcSessionOwner;
-import org.json.simple.JSONObject;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 

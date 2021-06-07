@@ -5,12 +5,9 @@ import com.BE.starTroad.domain.Roadmap;
 import com.BE.starTroad.domain.User;
 import com.BE.starTroad.repository.SpringDataJpaRoadmapRepository;
 import com.BE.starTroad.repository.SpringDataJpaUserRepository;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
