@@ -29,6 +29,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class GoogleOauth implements SocialOauth {
 
+    @Value("https://www.googleapis.com/userinfo/v2/me?access_token=")
+    private String GOOGLE_SNS_USER_INFO_BASE_URL;
+
+    /*
     @Value("${sns.google.url}")
     private String GOOGLE_SNS_BASE_URL;
     @Value("${sns.google.client.id}")
@@ -39,8 +43,6 @@ public class GoogleOauth implements SocialOauth {
     private String GOOGLE_SNS_CLIENT_SECRET;
     @Value("${sns.google.token.url}")
     private String GOOGLE_SNS_TOKEN_BASE_URL;
-    @Value("https://www.googleapis.com/userinfo/v2/me?access_token=")
-    private String GOOGLE_SNS_USER_INFO_BASE_URL;
 
     @Override
     public String getOauthRedirectURL() {
@@ -122,7 +124,8 @@ public class GoogleOauth implements SocialOauth {
         }
         //구글 로그인 처리 요청 실패
         return null;
-    }
+    }*/
+
     public String getInfo(String accessToken) {
         JsonNode userInfo = null;
         userInfo = getUserInfo(accessToken);

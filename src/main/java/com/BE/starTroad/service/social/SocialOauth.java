@@ -5,11 +5,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public interface SocialOauth {
 
-    String getOauthRedirectURL();
-    String requestAccessToken_Info(String code);
-    JsonNode getUserInfo(String authToken);
+    //String getOauthRedirectURL();
+    //String requestAccessToken_Info(String code);
+    //JsonNode getUserInfo(String authToken);
     String getInfo(String accessToken);
-
+    
     default SocialLoginType type() {
         if (this instanceof GoogleOauth) {
             return SocialLoginType.GOOGLE;

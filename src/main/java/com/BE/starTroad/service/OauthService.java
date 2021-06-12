@@ -18,7 +18,7 @@ public class OauthService {
     private final List<SocialOauth> socialOauthList;
     private final HttpServletResponse response;
 
-
+    /*
     public void request(SocialLoginType socialLoginType) {
         SocialOauth socialOauth = this.findSocialOauthByType(socialLoginType);
         String redirectURL = socialOauth.getOauthRedirectURL();
@@ -37,7 +37,7 @@ public class OauthService {
     public JsonNode getUserInfo(SocialLoginType socialLoginType, String accessToken) {
         SocialOauth socialOauth = this.findSocialOauthByType(socialLoginType);
         return socialOauth.getUserInfo(accessToken);
-    }
+    }*/
 
     public String getInfo(SocialLoginType socialLoginType, String accessToken) {
         SocialOauth socialOauth = this.findSocialOauthByType(socialLoginType);
